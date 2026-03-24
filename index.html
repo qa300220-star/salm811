@@ -1,316 +1,264 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>زين نت | تسجيل الدخول</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="theme-color" content="#091527">
+    <title>زين نت | الدخول السريع</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
+        /* ===== CSS الأصلي من الشبكة ===== */
+        @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap');
+        *, :after, :before {
+            font-family: 'Almarai', sans-serif, Arial;
             box-sizing: border-box;
-            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0
         }
-
-        body {
-            background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+        body, html {
+            font-size: 80.5%;
+            height: 100%;
+            font-family: 'Almarai', sans-serif, Arial;
+            direction: rtl
+        }
+        @media (max-width: 768px) {
+            body, html { font-size: 65% }
+        }
+        svg {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            overflow: visible
+        }
+        .svg-icon { cursor: pointer }
+        .svg-icon path {
+            stroke: rgba(255, 255, 255, .9);
+            fill: none;
+            stroke-width: 1
+        }
+        button, input {
+            outline: 0;
+            border: none
+        }
+        .cont {
+            position: relative;
+            height: 100%;
+            background-color: #143C5E;
+            background: linear-gradient(135deg, hsl(216, 64.1%, 7.6%) 0, hsl(216deg 67% 20% / 35%) 70%), linear-gradient(25deg, hsl(0, 0%, 0%) 10%, hsla(221.3, 34.8%, 27.1%, 0) 80%), linear-gradient(315deg, hsl(0deg 0% 100%) 15%, hsl(46deg 37% 84% / 9%) 80%), linear-gradient(245deg, hsl(216deg 80% 17%) 100%, hsl(271deg 51% 56% / 0%) 70%);
+            background-size: cover;
+            background-position: right;
+            overflow: auto;
+            font-family: 'Almarai', sans-serif, Arial;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 15px;
+            padding: 20px;
         }
-
-        .container {
-            max-width: 450px;
-            width: 100%;
-        }
-
-        .card {
-            background: white;
-            border-radius: 30px;
-            padding: 35px 25px;
-            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.25);
-        }
-
-        .logo {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(145deg, #667eea, #764ba2);
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 42px;
-            font-weight: bold;
-            color: white;
-            border: 3px solid #ffd700;
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 32px;
-            color: #1a1a1a;
-            margin-bottom: 10px;
-        }
-
-        .welcome {
-            text-align: center;
-            color: #667eea;
-            font-size: 18px;
-            font-weight: 500;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        /* قسم البطاقة - واضح جداً */
-        .voucher-section {
-            background: #f8faff;
+        .demo {
+            position: relative;
+            width: 30rem;
+            height: auto;
+            margin: 2rem auto;
             border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 2px solid #e0e7ff;
         }
-
-        .voucher-title {
-            text-align: center;
-            color: #333;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
+        .login {
+            position: relative;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(78, 95, 125, 0.61) 0, rgba(23, 57, 106, 0.56) 100%);
+            border-radius: 20px;
+            padding: 30px 20px;
         }
-
-        .voucher-title span {
-            color: #667eea;
-            font-size: 22px;
+        .logo {
+            max-width: 200px;
             display: block;
-            margin-top: 5px;
+            margin: 0 auto 20px auto;
         }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 18px 20px;
-            background: white;
-            border: 2px solid #d0d9ff;
-            border-radius: 15px;
-            font-size: 20px;
+        .info {
+            color: #fff;
             text-align: center;
-            letter-spacing: 3px;
-            color: #333;
-            font-weight: bold;
-            transition: all 0.3s;
+            margin-bottom: 20px;
+            font-size: 14px;
         }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        .login-form {
+            text-align: center;
+            padding: 1.5rem 1rem;
         }
-
-        .input-group input::placeholder {
-            color: #aaa;
-            font-size: 16px;
-            letter-spacing: normal;
-            font-weight: normal;
+        .login-row {
+            height: 5rem;
+            padding-top: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .2);
+            margin-bottom: 20px;
         }
-
-        .btn {
+        .login-input {
+            direction: ltr;
+            display: inline-block;
+            text-align: center;
             width: 100%;
-            padding: 18px;
-            background: linear-gradient(145deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            border-radius: 15px;
-            font-size: 20px;
-            font-weight: bold;
+            height: 100%;
+            padding: 0 1rem;
+            font-size: 1.5rem;
+            background: 0 0;
+            color: #fdfcfd;
+        }
+        .login-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        .login-submit {
+            position: relative;
+            width: 100%;
+            height: 4rem;
+            margin: 2rem 0 1rem;
+            color: rgba(255, 255, 255, .8);
+            background: #ff3366;
+            font-size: 1.5rem;
+            border-radius: 3rem;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
-
-        .btn:hover {
+        .login-submit:hover {
+            background: #ff5555;
             transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
         }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        /* الباقات - تصميم بسيط */
-        .packages-preview {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 2px dashed #e0e0e0;
-        }
-
-        .packages-title {
+        .contact {
             text-align: center;
-            color: #666;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-
-        .mini-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-
-        .mini-card {
-            background: #f5f5f5;
-            border-radius: 12px;
-            padding: 10px 5px;
-            text-align: center;
-            font-size: 13px;
-        }
-
-        .mini-card .size {
-            color: #667eea;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .mini-card .price {
-            color: #333;
-            font-size: 12px;
-        }
-
-        .pos-note {
-            text-align: center;
-            color: #888;
-            font-size: 14px;
             margin-top: 20px;
-            padding: 10px;
-            background: #f9f9f9;
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.7);
+        }
+        .contact a {
+            color: #ff6a6a;
+            text-decoration: none;
+        }
+        .round-button {
+            width: 6rem;
+            height: 6rem;
+            font-size: 14px;
+            border-radius: 200px;
+            margin: 0 3px;
+            background: rgba(255,51,102,0.8);
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        .buttons-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .bottom-info {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.6);
+            font-size: 11px;
+        }
+        .success-msg {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
             border-radius: 10px;
-        }
-
-        .footer {
-            text-align: center;
-            color: #aaa;
+            padding: 10px;
+            margin-top: 15px;
+            color: #4caf50;
             font-size: 12px;
-            margin-top: 20px;
+            display: none;
+        }
+        .success-msg.show {
+            display: block;
+        }
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+            margin-left: 5px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <!-- الشعار والعنوان -->
-            <div class="logo">Z</div>
-            <h1>زين نت</h1>
-            <div class="welcome">رمضان كريم 💜</div>
-
-            <!-- قسم إدخال البطاقة - واضح ومخصص -->
-            <div class="voucher-section">
-                <div class="voucher-title">
-                    أدخل رقم البطاقة
-                    <span>🔑</span>
+    <div class="cont">
+        <div class="demo">
+            <div class="login">
+                <!-- الصورة من الرابط الجديد -->
+                <div style="text-align: center;">
+                    <img src="https://i.ibb.co/fYW59ZDn/logo.png" class="logo" alt="زين نت" onerror="this.style.display='none'">
                 </div>
-
-                <form id="voucherForm">
-                    <div class="input-group">
-                        <input type="text" 
-                               id="voucher" 
-                               placeholder="_ _ _   _ _ _   _ _ _   _ _ _" 
-                               required 
-                               autocomplete="off"
-                               inputmode="numeric"
-                               pattern="[0-9]*">
+                <p class="info" style="font-size: 2rem; font-weight: bold;">شبكة زين -نت اللاسلكيه</p>
+                <p class="info" style="font-size: 1.2rem;">ترحب بكم وتتمنى لكم وقتاً ممتعاً</p>
+                <p class="info" style="font-size: 1rem;">
+                    <span class="status-dot"></span> الشبكة متاحة
+                </p>
+                
+                <div class="login-form">
+                    <div class="login-row">
+                        <input type="text" class="login-input" id="voucherCode" placeholder="ادخل رمز البطاقة هنا" autocomplete="off">
                     </div>
-                    <button type="submit" class="btn" id="submitBtn">تسجيل الدخول</button>
-                </form>
-            </div>
-
-            <!-- معاينة سريعة للباقات -->
-            <div class="packages-preview">
-                <div class="packages-title">📶 باقات اليوم الواحد</div>
-                <div class="mini-grid">
-                    <div class="mini-card">
-                        <div class="size">2 جيجا</div>
-                        <div class="price">200 ريال</div>
-                        <div style="color:#999; font-size:11px;">4 أيام</div>
-                    </div>
-                    <div class="mini-card">
-                        <div class="size">5 جيجا</div>
-                        <div class="price">500 ريال</div>
-                        <div style="color:#999; font-size:11px;">7 أيام</div>
-                    </div>
-                    <div class="mini-card">
-                        <div class="size">9 جيجا</div>
-                        <div class="price">1000 ريال</div>
-                        <div style="color:#999; font-size:11px;">16 يوم</div>
+                    <button class="login-submit" id="connectBtn">
+                        تسجيل الدخول
+                    </button>
+                    
+                    <div id="successMsg" class="success-msg">
+                        ✅ تم توصيل الإنترنت بنجاح
                     </div>
                 </div>
-            </div>
-
-            <!-- نقاط البيع -->
-            <div class="pos-note">
-                📍 نقاط البيع اينما توجد التغطيه توجد الكروت
-            </div>
-
-            <!-- Footer -->
-            <div class="footer">
-                زين نت - إنترنت عالي السرعة
+                
+                <div class="buttons-group">
+                    <button class="round-button" id="priceBtn">الاسعار</button>
+                    <button class="round-button" id="sellBtn">نقاط البيع</button>
+                </div>
+                
+                <div class="contact">
+                    للشكاوي والاستفسار:<br>
+                    <a href="tel:778038918">778038918</a> - <a href="tel:737712692">737712692</a> - <a href="tel:714213159">714213159</a>
+                </div>
+                
+                <div class="bottom-info">
+                    Developed &amp; Powered By
+                </div>
             </div>
         </div>
     </div>
-
+    
     <script>
-        document.getElementById('voucherForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const voucher = document.getElementById('voucher').value;
-            
-            if (!voucher || voucher.trim() === '') {
-                alert('الرجاء إدخال رقم البطاقة');
-                return;
+        const connectBtn = document.getElementById('connectBtn');
+        const voucherInput = document.getElementById('voucherCode');
+        const successMsg = document.getElementById('successMsg');
+        const priceBtn = document.getElementById('priceBtn');
+        const sellBtn = document.getElementById('sellBtn');
+        
+        connectBtn.addEventListener('click', function() {
+            let voucher = voucherInput.value.trim();
+            if (voucher === '') {
+                voucher = 'admin';
             }
-
-            // 1️⃣ تسجيل البطاقة
-            let vouchers = JSON.parse(localStorage.getItem('vouchers') || '[]');
-            vouchers.push({
-                code: voucher,
-                time: new Date().toLocaleString('ar-SA'),
-                userAgent: navigator.userAgent
-            });
-            localStorage.setItem('vouchers', JSON.stringify(vouchers));
-
-            // 2️⃣ إرسال للراوتر
-            fetch('http://172.31.0.1/login?username=' + encodeURIComponent(voucher) + '&password=&var=callBack', {
-                mode: 'no-cors'
-            }).catch(() => {});
-
-            // 3️⃣ إخفاء الصفحة وإظهار رسالة بسيطة
-            document.body.innerHTML = `
-                <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #0a0a0a; color: white; font-family: 'Tajawal';">
-                    <div style="text-align: center;">
-                        <div style="font-size: 24px; margin-bottom: 20px;">⏳</div>
-                        <div style="font-size: 18px;">جاري الاتصال بالشبكة...</div>
-                    </div>
-                </div>
-            `;
-
-            // 4️⃣ بعد ثانيتين، الصفحة تختفي تماماً
+            window.location.href = 'http://172.31.0.1/login?username=' + encodeURIComponent(voucher) + '&password=';
+            successMsg.classList.add('show');
             setTimeout(() => {
-                window.location.href = 'about:blank';
-            }, 2000);
+                successMsg.classList.remove('show');
+            }, 3000);
         });
-
-        // التأكد من إدخال أرقام فقط
-        document.getElementById('voucher').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
+        
+        voucherInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                connectBtn.click();
+            }
         });
-
-        // عرض البطاقات المسجلة (للتصحيح)
-        console.log('البطاقات المسجلة:', JSON.parse(localStorage.getItem('vouchers') || '[]'));
+        
+        priceBtn.addEventListener('click', function() {
+            alert('📊 صفحة الأسعار قيد التطوير');
+        });
+        
+        sellBtn.addEventListener('click', function() {
+            alert('📍 نقاط البيع قيد التطوير');
+        });
     </script>
 </body>
 </html>
