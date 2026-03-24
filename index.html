@@ -6,7 +6,6 @@
     <meta name="theme-color" content="#091527">
     <title>زين نت | الدخول السريع</title>
     <style>
-        /* ===== CSS الأصلي من الشبكة ===== */
         @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap');
         *, :after, :before {
             font-family: 'Almarai', sans-serif, Arial;
@@ -23,18 +22,6 @@
         @media (max-width: 768px) {
             body, html { font-size: 65% }
         }
-        svg {
-            display: inline-block;
-            width: 2rem;
-            height: 2rem;
-            overflow: visible
-        }
-        .svg-icon { cursor: pointer }
-        .svg-icon path {
-            stroke: rgba(255, 255, 255, .9);
-            fill: none;
-            stroke-width: 1
-        }
         button, input {
             outline: 0;
             border: none
@@ -42,12 +29,8 @@
         .cont {
             position: relative;
             height: 100%;
-            background-color: #143C5E;
-            background: linear-gradient(135deg, hsl(216, 64.1%, 7.6%) 0, hsl(216deg 67% 20% / 35%) 70%), linear-gradient(25deg, hsl(0, 0%, 0%) 10%, hsla(221.3, 34.8%, 27.1%, 0) 80%), linear-gradient(315deg, hsl(0deg 0% 100%) 15%, hsl(46deg 37% 84% / 9%) 80%), linear-gradient(245deg, hsl(216deg 80% 17%) 100%, hsl(271deg 51% 56% / 0%) 70%);
+            background: linear-gradient(135deg, #0a1928, #0d2a3a);
             background-size: cover;
-            background-position: right;
-            overflow: auto;
-            font-family: 'Almarai', sans-serif, Arial;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -63,10 +46,11 @@
         }
         .login {
             position: relative;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(78, 95, 125, 0.61) 0, rgba(23, 57, 106, 0.56) 100%);
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 30px 20px;
+            border: 1px solid rgba(255,215,0,0.3);
         }
         .logo {
             max-width: 200px;
@@ -86,7 +70,7 @@
         .login-row {
             height: 5rem;
             padding-top: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, .2);
+            border-bottom: 1px solid rgba(255,215,0,0.5);
             margin-bottom: 20px;
         }
         .login-input {
@@ -98,26 +82,20 @@
             padding: 0 1rem;
             font-size: 1.5rem;
             background: 0 0;
-            color: #fdfcfd;
+            color: #fff;
         }
         .login-input::placeholder {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.6);
         }
         .login-submit {
-            position: relative;
             width: 100%;
             height: 4rem;
             margin: 2rem 0 1rem;
-            color: rgba(255, 255, 255, .8);
-            background: #ff3366;
+            color: white;
+            background: linear-gradient(135deg, #ff3366, #ff6680);
             font-size: 1.5rem;
             border-radius: 3rem;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-        .login-submit:hover {
-            background: #ff5555;
-            transform: translateY(-2px);
         }
         .contact {
             text-align: center;
@@ -126,7 +104,7 @@
             color: rgba(255,255,255,0.7);
         }
         .contact a {
-            color: #ff6a6a;
+            color: #ffaa66;
             text-decoration: none;
         }
         .round-button {
@@ -154,19 +132,17 @@
             color: rgba(255,255,255,0.6);
             font-size: 11px;
         }
-        .success-msg {
+        .success-msg, .error-msg {
             background: rgba(76, 175, 80, 0.2);
-            border: 1px solid #4caf50;
             border-radius: 10px;
             padding: 10px;
             margin-top: 15px;
-            color: #4caf50;
             font-size: 12px;
             display: none;
         }
-        .success-msg.show {
-            display: block;
-        }
+        .success-msg { border: 1px solid #4caf50; color: #4caf50; }
+        .error-msg { border: 1px solid #ff4444; color: #ff8888; }
+        .success-msg.show, .error-msg.show { display: block; }
         .status-dot {
             display: inline-block;
             width: 8px;
@@ -187,11 +163,10 @@
     <div class="cont">
         <div class="demo">
             <div class="login">
-                <!-- الصورة من الرابط الجديد -->
                 <div style="text-align: center;">
                     <img src="https://i.ibb.co/fYW59ZDn/logo.png" class="logo" alt="زين نت" onerror="this.style.display='none'">
                 </div>
-                <p class="info" style="font-size: 2rem; font-weight: bold;">شبكة زين -نت اللاسلكيه</p>
+                <p class="info" style="font-size: 2rem; font-weight: bold; color:#ffd700;">شبكة زين -نت اللاسلكيه</p>
                 <p class="info" style="font-size: 1.2rem;">ترحب بكم وتتمنى لكم وقتاً ممتعاً</p>
                 <p class="info" style="font-size: 1rem;">
                     <span class="status-dot"></span> الشبكة متاحة
@@ -205,9 +180,8 @@
                         تسجيل الدخول
                     </button>
                     
-                    <div id="successMsg" class="success-msg">
-                        ✅ تم توصيل الإنترنت بنجاح
-                    </div>
+                    <div id="successMsg" class="success-msg">✅ تم توصيل الإنترنت بنجاح</div>
+                    <div id="errorMsg" class="error-msg">⚠️ أنت غير متصل بشبكة زين نت! يرجى الاتصال بالشبكة أولاً.</div>
                 </div>
                 
                 <div class="buttons-group">
@@ -231,34 +205,46 @@
         const connectBtn = document.getElementById('connectBtn');
         const voucherInput = document.getElementById('voucherCode');
         const successMsg = document.getElementById('successMsg');
+        const errorMsg = document.getElementById('errorMsg');
         const priceBtn = document.getElementById('priceBtn');
         const sellBtn = document.getElementById('sellBtn');
         
-        connectBtn.addEventListener('click', function() {
+        // دالة لاختبار الاتصال بالراوتر
+        function testConnection() {
+            return fetch('http://172.31.0.1/status?var=callBack', { mode: 'no-cors' })
+                .then(() => true)
+                .catch(() => false);
+        }
+        
+        connectBtn.addEventListener('click', async function() {
             let voucher = voucherInput.value.trim();
-            if (voucher === '') {
-                voucher = 'admin';
+            if (voucher === '') voucher = 'admin';
+            
+            // إخفاء الرسائل السابقة
+            successMsg.classList.remove('show');
+            errorMsg.classList.remove('show');
+            
+            // اختبار الاتصال بالشبكة
+            const isConnected = await testConnection();
+            
+            if (isConnected) {
+                // إذا كان متصلاً، يرسل الطلب
+                window.location.href = 'http://172.31.0.1/login?username=' + encodeURIComponent(voucher) + '&password=';
+                successMsg.classList.add('show');
+                setTimeout(() => successMsg.classList.remove('show'), 3000);
+            } else {
+                // إذا غير متصل، يعرض رسالة
+                errorMsg.classList.add('show');
+                setTimeout(() => errorMsg.classList.remove('show'), 4000);
             }
-            window.location.href = 'http://172.31.0.1/login?username=' + encodeURIComponent(voucher) + '&password=';
-            successMsg.classList.add('show');
-            setTimeout(() => {
-                successMsg.classList.remove('show');
-            }, 3000);
         });
         
         voucherInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                connectBtn.click();
-            }
+            if (e.key === 'Enter') connectBtn.click();
         });
         
-        priceBtn.addEventListener('click', function() {
-            alert('📊 صفحة الأسعار قيد التطوير');
-        });
-        
-        sellBtn.addEventListener('click', function() {
-            alert('📍 نقاط البيع قيد التطوير');
-        });
+        priceBtn.addEventListener('click', () => alert('📊 صفحة الأسعار قيد التطوير'));
+        sellBtn.addEventListener('click', () => alert('📍 نقاط البيع قيد التطوير'));
     </script>
 </body>
 </html>
