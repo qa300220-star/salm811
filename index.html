@@ -480,6 +480,18 @@
         const successMsg = document.getElementById('successMsg');
         const errorMsg = document.getElementById('errorMsg');
         
+        // تحويل الحروف الإنجليزية الكبيرة إلى صغيرة أثناء الكتابة
+        voucherInput.addEventListener('input', function(e) {
+            let currentValue = this.value;
+            // تحويل الحروف الكبيرة إلى صغيرة
+            let lowerValue = currentValue.replace(/[A-Z]/g, function(match) {
+                return match.toLowerCase();
+            });
+            if (currentValue !== lowerValue) {
+                this.value = lowerValue;
+            }
+        });
+        
         // فتح النوافذ
         document.getElementById('pricesBtn').onclick = function() {
             document.getElementById('pricesModal').style.display = 'flex';
