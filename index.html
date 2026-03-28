@@ -29,46 +29,9 @@
             height: 100%;
             font-family: 'Almarai', sans-serif, Arial;
             direction: rtl;
-            transition: background 0.5s ease;
         }
-        /* وضع النهار */
         body {
             background: linear-gradient(135deg, #0a1928, #0d2a3a);
-        }
-        /* وضع الليل */
-        body.dark-mode {
-            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
-        }
-        body.dark-mode .login {
-            background: rgba(0,0,0,0.7);
-            border-color: rgba(100,100,100,0.5);
-        }
-        body.dark-mode .login-input {
-            color: #eee;
-        }
-        body.dark-mode .info {
-            color: #ddd;
-        }
-        body.dark-mode .price-detail {
-            color: #ccc;
-        }
-        body.dark-mode .points-text-modal {
-            color: #ddd;
-        }
-        body.dark-mode .contact {
-            color: #aaa;
-        }
-        body.dark-mode .bottom-info {
-            color: #888;
-        }
-        body.dark-mode .modal-content {
-            background: linear-gradient(135deg, #111, #1a1a2e);
-        }
-        body.dark-mode .info-content {
-            background: linear-gradient(135deg, #111, #1a1a2e);
-        }
-        body.dark-mode .saved-cards-modal .modal-content {
-            background: linear-gradient(135deg, #111, #1a1a2e);
         }
         @media (max-width: 768px) {
             body, html { font-size: 65% }
@@ -104,65 +67,6 @@
         }
         .login:hover {
             transform: translateY(-5px);
-        }
-        /* زر الوضع الليلي - صغير */
-        .dark-mode-container {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            z-index: 10;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 48px;
-            height: 26px;
-        }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .3s;
-            border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        .switch input:checked + .slider {
-            background-color: #2196F3;
-        }
-        .switch input:checked + .slider:before {
-            transform: translateX(22px);
-        }
-        .logo {
-            max-width: 200px;
-            width: 80%;
-            display: block;
-            margin: 0 auto 20px auto;
-            border-radius: 18px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease;
-        }
-        .logo:hover {
-            transform: scale(1.02);
         }
         .info {
             color: #fff;
@@ -511,10 +415,6 @@
                 height: 45px;
                 font-size: 1.2rem;
             }
-            .dark-mode-container {
-                top: 8px;
-                left: 8px;
-            }
         }
         .contact {
             text-align: center;
@@ -545,20 +445,6 @@
         .success-msg { border: 1px solid #4caf50; color: #4caf50; }
         .error-msg { border: 1px solid #ff4444; color: #ff8888; }
         .success-msg.show, .error-msg.show { display: block; }
-        .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #4caf50;
-            border-radius: 50%;
-            margin-left: 5px;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
-            70% { box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
-        }
         .welcome-message {
             background: linear-gradient(135deg, #ff3366, #ff6680);
             border-radius: 15px;
@@ -591,32 +477,15 @@
             .info {
                 font-size: 12px;
             }
-            .logo {
-                max-width: 170px;
-            }
         }
     </style>
 </head>
-<body id="mainBody">
+<body>
     <div class="cont">
         <div class="demo">
             <div class="login">
-                <!-- زر الوضع الليلي -->
-                <div class="dark-mode-container">
-                    <label class="switch">
-                        <input type="checkbox" id="darkModeToggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                
-                <div style="text-align: center;">
-                    <img src="https://i.ibb.co/5wyBHwL/file-0000000085d4722fb688b595ae1d633c.png" class="logo" alt="أون لاين" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23143C5E\'/%3E%3Ctext x=\'100\' y=\'120\' text-anchor=\'middle\' fill=\'white\' font-size=\'40\' font-weight=\'bold\'%3Eأون لاين%3C/text%3E%3C/svg%3E'">
-                </div>
                 <p class="info" style="font-size: 2rem; font-weight: bold; color:#ffd700;">أون لاين</p>
                 <p class="info" style="font-size: 1.2rem;">نت لاسلكي سريع | تغطية شاملة</p>
-                <p class="info" style="font-size: 1rem;">
-                    <span class="status-dot"></span> الشبكة متاحة
-                </p>
                 
                 <div class="login-form">
                     <div class="input-with-button">
@@ -732,25 +601,6 @@
         const successMsg = document.getElementById('successMsg');
         const errorMsg = document.getElementById('errorMsg');
         
-        // الوضع الليلي
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const body = document.body;
-        
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            body.classList.add('dark-mode');
-            darkModeToggle.checked = true;
-        }
-        
-        darkModeToggle.addEventListener('change', function() {
-            if (this.checked) {
-                body.classList.add('dark-mode');
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                body.classList.remove('dark-mode');
-                localStorage.setItem('darkMode', 'disabled');
-            }
-        });
-        
         // الكروت المحفوظة
         const STORAGE_KEY = 'saved_voucher_codes';
         let savedCodes = [];
@@ -809,28 +659,19 @@
         document.getElementById('pricesBtn').onclick = () => document.getElementById('pricesModal').style.display = 'flex';
         document.getElementById('pointsBtn').onclick = () => document.getElementById('pointsModal').style.display = 'flex';
         
-        // إغلاق النوافذ بالضغط خارجها (أي مكان خارج النافذة)
+        // إغلاق النوافذ بالضغط خارجها
         window.onclick = function(event) {
-            // نافذة الأسعار
             const pricesModal = document.getElementById('pricesModal');
-            if (event.target === pricesModal) {
-                pricesModal.style.display = 'none';
-            }
-            // نافذة نقاط البيع
+            if (event.target === pricesModal) pricesModal.style.display = 'none';
+            
             const pointsModal = document.getElementById('pointsModal');
-            if (event.target === pointsModal) {
-                pointsModal.style.display = 'none';
-            }
-            // نافذة الكروت المحفوظة
+            if (event.target === pointsModal) pointsModal.style.display = 'none';
+            
             const savedModal = document.getElementById('savedCardsModal');
-            if (event.target === savedModal) {
-                savedModal.style.display = 'none';
-            }
-            // نافذة المعلومات
+            if (event.target === savedModal) savedModal.style.display = 'none';
+            
             const infoModal = document.getElementById('infoModal');
-            if (event.target === infoModal) {
-                infoModal.style.display = 'none';
-            }
+            if (event.target === infoModal) infoModal.style.display = 'none';
         };
         
         function closeModal(modalId) {
