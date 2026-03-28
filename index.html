@@ -289,6 +289,19 @@
             border: 1px solid rgba(255,215,0,0.5);
             position: relative;
         }
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #ffaa66;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+        .close-modal:hover {
+            color: #ff6680;
+        }
         .modal-title {
             color: #ffd700;
             text-align: center;
@@ -361,6 +374,19 @@
             padding: 25px;
             border: 1px solid rgba(255,215,0,0.5);
             text-align: center;
+            position: relative;
+        }
+        .close-info-x {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #ffaa66;
+            font-weight: bold;
+        }
+        .close-info-x:hover {
+            color: #ff6680;
         }
         .info-content h3 {
             color: #ffd700;
@@ -419,6 +445,15 @@
             border: 1px solid rgba(255,215,0,0.5);
             position: relative;
             text-align: center;
+        }
+        .saved-cards-modal .close-modal {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #ffaa66;
+            font-weight: bold;
         }
         .saved-cards-modal .modal-title {
             color: #ffd700;
@@ -566,7 +601,7 @@
     <div class="cont">
         <div class="demo">
             <div class="login">
-                <!-- زر الوضع الليلي - صغير -->
+                <!-- زر الوضع الليلي -->
                 <div class="dark-mode-container">
                     <label class="switch">
                         <input type="checkbox" id="darkModeToggle">
@@ -619,6 +654,7 @@
     <!-- نافذة الأسعار -->
     <div id="pricesModal" class="modal">
         <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('pricesModal')">&times;</span>
             <div class="modal-title">باقات الإنترنت</div>
             <div class="pricing-list">
                 <div class="pricing-item">
@@ -656,6 +692,7 @@
     <!-- نافذة نقاط البيع -->
     <div id="pointsModal" class="modal">
         <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('pointsModal')">&times;</span>
             <div class="modal-title">نقاط البيع</div>
             <div class="points-text-modal">
                 تتوفر كروت الشحن في جميع البقالة المجاورة للشبكة
@@ -666,6 +703,7 @@
     <!-- نافذة البيانات الوهمية -->
     <div id="infoModal" class="info-modal">
         <div class="info-content">
+            <span class="close-info-x" onclick="closeInfoModal()">&times;</span>
             <h3>معلومات الاتصال</h3>
             <div class="info-details">
                 <p><span>عنوان الشبكة</span> <span>172.31.3.186</span></p>
@@ -682,6 +720,7 @@
     <!-- نافذة الكروت المحفوظة -->
     <div id="savedCardsModal" class="saved-cards-modal">
         <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('savedCardsModal')">&times;</span>
             <div class="modal-title">الكروت المحفوظة</div>
             <div id="savedCardsList" class="saved-cards-list"></div>
         </div>
@@ -770,10 +809,28 @@
         document.getElementById('pricesBtn').onclick = () => document.getElementById('pricesModal').style.display = 'flex';
         document.getElementById('pointsBtn').onclick = () => document.getElementById('pointsModal').style.display = 'flex';
         
+        // إغلاق النوافذ بالضغط خارجها (أي مكان خارج النافذة)
         window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) event.target.style.display = 'none';
-            if (event.target.classList.contains('info-modal')) event.target.style.display = 'none';
-            if (event.target.classList.contains('saved-cards-modal')) event.target.style.display = 'none';
+            // نافذة الأسعار
+            const pricesModal = document.getElementById('pricesModal');
+            if (event.target === pricesModal) {
+                pricesModal.style.display = 'none';
+            }
+            // نافذة نقاط البيع
+            const pointsModal = document.getElementById('pointsModal');
+            if (event.target === pointsModal) {
+                pointsModal.style.display = 'none';
+            }
+            // نافذة الكروت المحفوظة
+            const savedModal = document.getElementById('savedCardsModal');
+            if (event.target === savedModal) {
+                savedModal.style.display = 'none';
+            }
+            // نافذة المعلومات
+            const infoModal = document.getElementById('infoModal');
+            if (event.target === infoModal) {
+                infoModal.style.display = 'none';
+            }
         };
         
         function closeModal(modalId) {
