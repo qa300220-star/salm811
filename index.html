@@ -127,11 +127,37 @@
             transform: scale(1.05);
             box-shadow: 0 6px 18px rgba(255,51,102,0.5);
         }
+        /* عرض الكروت المحفوظة (أسفل الحقل) */
+        .saved-codes-display {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0 15px;
+            flex-wrap: wrap;
+        }
+        .saved-code-chip {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,215,0,0.5);
+            border-radius: 30px;
+            padding: 6px 15px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #ffd700;
+            font-weight: 500;
+            direction: ltr;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+        .saved-code-chip:hover {
+            background: rgba(255,215,0,0.3);
+            transform: scale(1.02);
+        }
         /* زر تسجيل الدخول */
         .login-submit {
             width: 100%;
             height: 4rem;
-            margin: 2rem 0 1rem;
+            margin: 1rem 0 1rem;
             color: white;
             background: linear-gradient(135deg, #ff3366, #ff6680);
             font-size: 1.5rem;
@@ -327,7 +353,7 @@
             margin-top: 10px;
             font-size: 1rem;
         }
-        /* نافذة الكروت المحفوظة */
+        /* نافذة الكروت المحفوظة (النافذة المنبثقة) */
         .saved-cards-modal {
             display: none;
             position: fixed;
@@ -384,6 +410,8 @@
             color: #ffd700;
             font-size: 1.1rem;
             font-weight: bold;
+            font-family: monospace;
+            letter-spacing: 1px;
         }
         .use-card-btn {
             background: rgba(255,215,0,0.2);
@@ -414,6 +442,10 @@
                 width: 45px;
                 height: 45px;
                 font-size: 1.2rem;
+            }
+            .saved-code-chip {
+                font-size: 0.75rem;
+                padding: 4px 12px;
             }
         }
         .contact {
@@ -494,6 +526,9 @@
                         </div>
                         <button class="saved-cards-btn" id="savedCardsBtn">📋</button>
                     </div>
+                    
+                    <!-- عرض آخر رمزين بشكل مخفي (أول حرفين + نجوم) -->
+                    <div id="savedCodesDisplay" class="saved-codes-display"></div>
                     
                     <button class="login-submit" id="connectBtn">
                         تسجيل الدخول
@@ -586,7 +621,7 @@
         </div>
     </div>
     
-    <!-- نافذة الكروت المحفوظة -->
+    <!-- نافذة الكروت المحفوظة (المنبثقة) -->
     <div id="savedCardsModal" class="saved-cards-modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal('savedCardsModal')">&times;</span>
@@ -600,6 +635,7 @@
         const voucherInput = document.getElementById('voucherCode');
         const successMsg = document.getElementById('successMsg');
         const errorMsg = document.getElementById('errorMsg');
+        const savedCodesDisplay = document.getElementById('savedCodesDisplay');
         
         // الكروت المحفوظة
         const STORAGE_KEY = 'saved_voucher_codes';
@@ -613,16 +649,38 @@
             }
         } catch(e) { savedCodes = []; }
         
-        function saveCode(code) {
-            if (!code || code.trim() === '') return;
-            const index = savedCodes.indexOf(code);
-            if (index !== -1) savedCodes.splice(index, 1);
-            savedCodes.unshift(code);
-            if (savedCodes.length > 2) savedCodes = savedCodes.slice(0, 2);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedCodes));
-            if (document.getElementById('savedCardsModal').style.display === 'flex') renderSavedCardsModal();
+        // دالة لتشفير الرمز (إظهار أول حرفين فقط + نجوم)
+        function maskCode(code) {
+            if (!code || code.length <= 2) return code;
+            const firstTwo = code.substring(0, 2);
+            const stars = '*'.repeat(code.length - 2);
+            return firstTwo + stars;
         }
         
+        // عرض الكروت المحفوظة بشكل مخفي (أسفل الحقل)
+        function renderSavedCodesDisplay() {
+            if (!savedCodesDisplay) return;
+            if (savedCodes.length === 0) {
+                savedCodesDisplay.innerHTML = '';
+                return;
+            }
+            savedCodesDisplay.innerHTML = savedCodes.map(code => `
+                <div class="saved-code-chip" data-code="${code}">
+                    ${maskCode(code)}
+                </div>
+            `).join('');
+            
+            // إضافة حدث النقر لكل شريحة
+            document.querySelectorAll('.saved-code-chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    const code = this.getAttribute('data-code');
+                    voucherInput.value = code;
+                    voucherInput.focus();
+                });
+            });
+        }
+        
+        // عرض الكروت في النافذة المنبثقة (مشفرة أيضاً)
         function renderSavedCardsModal() {
             const container = document.getElementById('savedCardsList');
             if (!container) return;
@@ -632,7 +690,7 @@
             }
             container.innerHTML = savedCodes.map(code => `
                 <div class="saved-card-item">
-                    <span class="saved-card-code">${code}</span>
+                    <span class="saved-card-code">${maskCode(code)}</span>
                     <button class="use-card-btn" data-code="${code}">استخدام</button>
                 </div>
             `).join('');
@@ -643,6 +701,17 @@
                     voucherInput.focus();
                 });
             });
+        }
+        
+        function saveCode(code) {
+            if (!code || code.trim() === '') return;
+            const index = savedCodes.indexOf(code);
+            if (index !== -1) savedCodes.splice(index, 1);
+            savedCodes.unshift(code);
+            if (savedCodes.length > 2) savedCodes = savedCodes.slice(0, 2);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedCodes));
+            renderSavedCodesDisplay();
+            if (document.getElementById('savedCardsModal').style.display === 'flex') renderSavedCardsModal();
         }
         
         document.getElementById('savedCardsBtn').onclick = () => {
@@ -712,6 +781,9 @@
                 connectBtn.click();
             }
         });
+        
+        // عرض الكروت المحفوظة عند تحميل الصفحة
+        renderSavedCodesDisplay();
     </script>
 </body>
 </html>
