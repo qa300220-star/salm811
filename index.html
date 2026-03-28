@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <meta name="theme-color" content="#091527">
-    <title>أون لاين | الدخول السريع</title>
+    <title>أون لاين</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap');
         *, :after, :before {
@@ -117,6 +117,177 @@
         .login-submit:active {
             transform: translateY(0);
         }
+        /* الدوائر الجانبية */
+        .circle-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 10px 0 15px;
+        }
+        .circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff3366, #ff6680);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(255,51,102,0.3);
+        }
+        .circle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(255,51,102,0.5);
+        }
+        /* النوافذ المنبثقة */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: linear-gradient(135deg, #0a1928, #0d2a3a);
+            border-radius: 20px;
+            width: 85%;
+            max-width: 350px;
+            padding: 25px;
+            border: 1px solid #ff6680;
+            position: relative;
+        }
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #ff6680;
+            font-weight: bold;
+        }
+        .close-modal:hover {
+            color: #ff3366;
+        }
+        .modal-title {
+            color: #ff6680;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .pricing-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .pricing-item {
+            background: rgba(255,51,102,0.1);
+            border-radius: 12px;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            border: 1px solid rgba(255,51,102,0.3);
+        }
+        .price-value {
+            color: #ff6680;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .price-detail {
+            color: #fff;
+            font-size: 0.8rem;
+        }
+        .points-text-modal {
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            line-height: 1.7;
+            text-align: center;
+            padding: 20px 10px;
+        }
+        /* نافذة المعلومات بعد التسجيل */
+        .info-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+        }
+        .info-content {
+            background: linear-gradient(135deg, #0a1928, #0d2a3a);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 340px;
+            padding: 25px;
+            border: 1px solid #ff3366;
+            text-align: center;
+        }
+        .info-content h3 {
+            color: #ff3366;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+        .info-details {
+            background: rgba(255,51,102,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: right;
+        }
+        .info-details p {
+            color: white;
+            font-size: 0.85rem;
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed rgba(255,51,102,0.3);
+            padding-bottom: 5px;
+        }
+        .info-details span:first-child {
+            color: #ff6680;
+            font-weight: bold;
+        }
+        .close-info {
+            background: #ff3366;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+        @media (max-width: 480px) {
+            .circle {
+                width: 60px;
+                height: 60px;
+                font-size: 0.8rem;
+            }
+            .pricing-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            .info-details p {
+                font-size: 0.75rem;
+            }
+        }
         .contact {
             text-align: center;
             margin-top: 20px;
@@ -180,32 +351,6 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
-        .welcome-message {
-            background: linear-gradient(135deg, #ff3366, #ff6680);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-            text-align: center;
-            animation: bounce 0.6s ease;
-            display: none;
-        }
-        .welcome-message.show {
-            display: block;
-        }
-        .welcome-message h3 {
-            color: white;
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-        .welcome-message p {
-            color: rgba(255,255,255,0.9);
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-        .welcome-message small {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-        }
         @media (max-width: 480px) {
             .login-submit {
                 font-size: 1.2rem;
@@ -216,12 +361,6 @@
             }
             .info {
                 font-size: 12px;
-            }
-            .welcome-message h3 {
-                font-size: 1.4rem;
-            }
-            .welcome-message p {
-                font-size: 0.9rem;
             }
             .logo {
                 max-width: 170px;
@@ -250,20 +389,17 @@
                         تسجيل الدخول
                     </button>
                     
-                    <div id="successMsg" class="success-msg">✅ تم توصيل الإنترنت بنجاح</div>
-                    <div id="errorMsg" class="error-msg">⚠️ يرجى إدخال الرمز</div>
-                    
-                    <div id="welcomeMsg" class="welcome-message">
-                        <h3>✨ أهلاً وسهلاً بك ✨</h3>
-                        <p>🌐 تم تسجيل الدخول بنجاح إلى شبكة أون لاين</p>
-                        <p>⚡ نتمنى لك تجربة إنترنت سريعة وممتعة</p>
-                        <p>📡 استمتع بتصفح آمن وسرعة فائقة</p>
-                        <small>شكراً لثقتكم بشبكة أون لاين</small>
+                    <div class="circle-buttons">
+                        <div class="circle" id="pricesBtn">الأسعار</div>
+                        <div class="circle" id="pointsBtn">نقاط البيع</div>
                     </div>
+                    
+                    <div id="successMsg" class="success-msg">تم توصيل الإنترنت بنجاح</div>
+                    <div id="errorMsg" class="error-msg">يرجى إدخال الرمز</div>
                 </div>
                 
                 <div class="contact">
-                    📞 للاستفسار والدعم:<br>
+                    للاستفسار والدعم:<br>
                     <a href="tel:774629815">774629815</a>
                 </div>
                 
@@ -274,12 +410,90 @@
         </div>
     </div>
     
+    <!-- نافذة الأسعار -->
+    <div id="pricesModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('pricesModal')">&times;</span>
+            <div class="modal-title">باقات الإنترنت</div>
+            <div class="pricing-list">
+                <div class="pricing-item">
+                    <div class="price-value">200 ريال</div>
+                    <div class="price-detail">صلاحية يوم | 2 جيجابايت</div>
+                </div>
+                <div class="pricing-item">
+                    <div class="price-value">500 ريال</div>
+                    <div class="price-detail">صلاحية 4 أيام | 5 جيجابايت</div>
+                </div>
+                <div class="pricing-item">
+                    <div class="price-value">1000 ريال</div>
+                    <div class="price-detail">صلاحية أسبوع | 12 جيجابايت</div>
+                </div>
+                <div class="pricing-item">
+                    <div class="price-value">3000 ريال</div>
+                    <div class="price-detail">صلاحية شهر | 40 جيجابايت</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- نافذة نقاط البيع -->
+    <div id="pointsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('pointsModal')">&times;</span>
+            <div class="modal-title">نقاط البيع</div>
+            <div class="points-text-modal">
+                تتوفر كروت الشحن في جميع البقالة المجاورة للشبكة
+            </div>
+        </div>
+    </div>
+    
+    <!-- نافذة معلومات الاتصال بعد تسجيل الدخول -->
+    <div id="infoModal" class="info-modal">
+        <div class="info-content">
+            <h3>معلومات الاتصال</h3>
+            <div class="info-details">
+                <p><span>عنوان الشبكة</span> <span>172.31.3.186</span></p>
+                <p><span>التنزيل</span> <span>6 كيلوبايت</span></p>
+                <p><span>الرفع</span> <span>8 كيلوبايت</span></p>
+                <p><span>التحميل المتبقي</span> <span>15 جيجابايت</span></p>
+                <p><span>الوقت المستهلك</span> <span>7 ثانية</span></p>
+                <p><span>المدة المتبقية</span> <span>16 يوم 13 ساعة 52 دقيقة 24 ثانية</span></p>
+            </div>
+            <button class="close-info" onclick="closeInfoModal()">إغلاق</button>
+        </div>
+    </div>
+    
     <script>
         const connectBtn = document.getElementById('connectBtn');
         const voucherInput = document.getElementById('voucherCode');
         const successMsg = document.getElementById('successMsg');
         const errorMsg = document.getElementById('errorMsg');
-        const welcomeMsg = document.getElementById('welcomeMsg');
+        
+        // فتح النوافذ
+        document.getElementById('pricesBtn').onclick = function() {
+            document.getElementById('pricesModal').style.display = 'flex';
+        };
+        document.getElementById('pointsBtn').onclick = function() {
+            document.getElementById('pointsModal').style.display = 'flex';
+        };
+        
+        // إغلاق النوافذ بالضغط خارجها
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+            if (event.target.classList.contains('info-modal')) {
+                event.target.style.display = 'none';
+            }
+        };
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        function closeInfoModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
         
         connectBtn.addEventListener('click', function() {
             let code = voucherInput.value.trim();
@@ -295,14 +509,12 @@
             
             setTimeout(() => {
                 successMsg.classList.remove('show');
-                welcomeMsg.classList.add('show');
-                welcomeMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                document.getElementById('infoModal').style.display = 'flex';
+                voucherInput.value = '';
                 
                 setTimeout(() => {
-                    welcomeMsg.classList.remove('show');
-                    voucherInput.value = '';
-                }, 5000);
-                
+                    closeInfoModal();
+                }, 8000);
             }, 1500);
         });
         
