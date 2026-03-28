@@ -89,11 +89,18 @@
             text-align: center;
             padding: 1.5rem 1rem;
         }
+        /* تعديل: صف الحقل والزر معًا */
+        .input-with-button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
         .login-row {
+            flex: 1;
             height: 5rem;
             padding-top: 1rem;
             border-bottom: 1px solid rgba(255,215,0,0.5);
-            margin-bottom: 20px;
         }
         .login-input {
             direction: ltr;
@@ -108,6 +115,28 @@
         }
         .login-input::placeholder {
             color: rgba(255,255,255,0.6);
+        }
+        /* زر الكروت المحفوظة */
+        .saved-cards-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff3366, #ff6680);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255,51,102,0.3);
+            flex-shrink: 0;
+        }
+        .saved-cards-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(255,51,102,0.5);
         }
         .login-submit {
             width: 100%;
@@ -285,6 +314,80 @@
             margin-top: 10px;
             font-size: 1rem;
         }
+        /* نافذة الكروت المحفوظة */
+        .saved-cards-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+        }
+        .saved-cards-modal .modal-content {
+            background: linear-gradient(135deg, #0a1928, #0d2a3a);
+            border-radius: 20px;
+            width: 85%;
+            max-width: 350px;
+            padding: 25px;
+            border: 1px solid #ff6680;
+            position: relative;
+            text-align: center;
+        }
+        .saved-cards-modal .modal-title {
+            color: #ff6680;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+        .saved-cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 15px 0;
+        }
+        .saved-card-item {
+            background: rgba(255,51,102,0.15);
+            border: 1px solid rgba(255,51,102,0.4);
+            border-radius: 12px;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            direction: ltr;
+        }
+        .saved-card-code {
+            color: #ff6680;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .use-card-btn {
+            background: linear-gradient(135deg, #ff3366, #ff6680);
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .clear-cards-btn {
+            background: rgba(255,68,68,0.3);
+            border: 1px solid #ff4444;
+            color: #ff8888;
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 0.8rem;
+        }
+        .no-cards-msg {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            padding: 20px;
+        }
         @media (max-width: 480px) {
             .circle {
                 width: 60px;
@@ -297,6 +400,11 @@
             }
             .info-details p {
                 font-size: 0.75rem;
+            }
+            .saved-cards-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
             }
         }
         .contact {
@@ -393,9 +501,14 @@
                 </p>
                 
                 <div class="login-form">
-                    <div class="login-row">
-                        <input type="text" class="login-input" id="voucherCode" placeholder="ادخل الرمز" autocomplete="off">
+                    <!-- الحقل والزر بجانب بعض -->
+                    <div class="input-with-button">
+                        <div class="login-row">
+                            <input type="text" class="login-input" id="voucherCode" placeholder="ادخل الرمز" autocomplete="off">
+                        </div>
+                        <button class="saved-cards-btn" id="savedCardsBtn">📋</button>
                     </div>
+                    
                     <button class="login-submit" id="connectBtn">
                         تسجيل الدخول
                     </button>
@@ -474,16 +587,81 @@
         </div>
     </div>
     
+    <!-- نافذة الكروت المحفوظة -->
+    <div id="savedCardsModal" class="saved-cards-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('savedCardsModal')">&times;</span>
+            <div class="modal-title">الكروت المحفوظة</div>
+            <div id="savedCardsList" class="saved-cards-list"></div>
+            <button class="clear-cards-btn" id="clearCardsBtn">مسح الكل</button>
+        </div>
+    </div>
+    
     <script>
         const connectBtn = document.getElementById('connectBtn');
         const voucherInput = document.getElementById('voucherCode');
         const successMsg = document.getElementById('successMsg');
         const errorMsg = document.getElementById('errorMsg');
         
+        // الكروت المحفوظة
+        const STORAGE_KEY = 'saved_voucher_codes';
+        let savedCodes = [];
+        
+        try {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                savedCodes = JSON.parse(stored);
+                if (savedCodes.length > 2) savedCodes = savedCodes.slice(0, 2);
+            }
+        } catch(e) { savedCodes = []; }
+        
+        function saveCode(code) {
+            if (!code || code.trim() === '') return;
+            const index = savedCodes.indexOf(code);
+            if (index !== -1) savedCodes.splice(index, 1);
+            savedCodes.unshift(code);
+            if (savedCodes.length > 2) savedCodes = savedCodes.slice(0, 2);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedCodes));
+            if (document.getElementById('savedCardsModal').style.display === 'flex') renderSavedCardsModal();
+        }
+        
+        function renderSavedCardsModal() {
+            const container = document.getElementById('savedCardsList');
+            if (!container) return;
+            if (savedCodes.length === 0) {
+                container.innerHTML = '<div class="no-cards-msg">لا توجد كروت محفوظة</div>';
+                return;
+            }
+            container.innerHTML = savedCodes.map(code => `
+                <div class="saved-card-item">
+                    <span class="saved-card-code">${code}</span>
+                    <button class="use-card-btn" data-code="${code}">استخدام</button>
+                </div>
+            `).join('');
+            document.querySelectorAll('.use-card-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    voucherInput.value = this.getAttribute('data-code');
+                    closeModal('savedCardsModal');
+                    voucherInput.focus();
+                });
+            });
+        }
+        
+        function clearAllCards() {
+            savedCodes = [];
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedCodes));
+            renderSavedCardsModal();
+        }
+        
+        document.getElementById('savedCardsBtn').onclick = () => {
+            renderSavedCardsModal();
+            document.getElementById('savedCardsModal').style.display = 'flex';
+        };
+        document.getElementById('clearCardsBtn').onclick = clearAllCards;
+        
         // تحويل الحروف الإنجليزية الكبيرة إلى صغيرة أثناء الكتابة
         voucherInput.addEventListener('input', function(e) {
             let currentValue = this.value;
-            // تحويل الحروف الكبيرة إلى صغيرة
             let lowerValue = currentValue.replace(/[A-Z]/g, function(match) {
                 return match.toLowerCase();
             });
@@ -508,6 +686,9 @@
             if (event.target.classList.contains('info-modal')) {
                 event.target.style.display = 'none';
             }
+            if (event.target.classList.contains('saved-cards-modal')) {
+                event.target.style.display = 'none';
+            }
         };
         
         function closeModal(modalId) {
@@ -528,6 +709,7 @@
             }
             
             errorMsg.classList.remove('show');
+            saveCode(code);
             successMsg.classList.add('show');
             
             setTimeout(() => {
