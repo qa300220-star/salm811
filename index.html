@@ -28,7 +28,47 @@
             font-size: 80.5%;
             height: 100%;
             font-family: 'Almarai', sans-serif, Arial;
-            direction: rtl
+            direction: rtl;
+            transition: background 0.5s ease;
+        }
+        /* وضع النهار */
+        body {
+            background: linear-gradient(135deg, #0a1928, #0d2a3a);
+        }
+        /* وضع الليل */
+        body.dark-mode {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+        }
+        body.dark-mode .login {
+            background: rgba(0,0,0,0.7);
+            border-color: rgba(100,100,100,0.5);
+        }
+        body.dark-mode .login-input {
+            color: #eee;
+        }
+        body.dark-mode .info {
+            color: #ddd;
+        }
+        body.dark-mode .price-detail {
+            color: #ccc;
+        }
+        body.dark-mode .points-text-modal {
+            color: #ddd;
+        }
+        body.dark-mode .contact {
+            color: #aaa;
+        }
+        body.dark-mode .bottom-info {
+            color: #888;
+        }
+        body.dark-mode .modal-content {
+            background: linear-gradient(135deg, #111, #1a1a2e);
+        }
+        body.dark-mode .info-content {
+            background: linear-gradient(135deg, #111, #1a1a2e);
+        }
+        body.dark-mode .saved-cards-modal .modal-content {
+            background: linear-gradient(135deg, #111, #1a1a2e);
         }
         @media (max-width: 768px) {
             body, html { font-size: 65% }
@@ -40,8 +80,6 @@
         .cont {
             position: relative;
             height: 100%;
-            background: linear-gradient(135deg, #0a1928, #0d2a3a);
-            background-size: cover;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -67,6 +105,53 @@
         .login:hover {
             transform: translateY(-5px);
         }
+        /* زر الوضع الليلي - صغير */
+        .dark-mode-container {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 10;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .switch input:checked + .slider {
+            background-color: #2196F3;
+        }
+        .switch input:checked + .slider:before {
+            transform: translateX(22px);
+        }
         .logo {
             max-width: 200px;
             width: 80%;
@@ -89,7 +174,7 @@
             text-align: center;
             padding: 1.5rem 1rem;
         }
-        /* تعديل: صف الحقل والزر معًا */
+        /* صف الحقل والزر معًا */
         .input-with-button {
             display: flex;
             align-items: center;
@@ -138,6 +223,7 @@
             transform: scale(1.05);
             box-shadow: 0 6px 18px rgba(255,51,102,0.5);
         }
+        /* زر تسجيل الدخول */
         .login-submit {
             width: 100%;
             height: 4rem;
@@ -154,19 +240,16 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(255,51,102,0.4);
         }
-        .login-submit:active {
-            transform: translateY(0);
-        }
-        /* الدوائر الجانبية */
+        /* الدوائر */
         .circle-buttons {
             display: flex;
             justify-content: center;
             gap: 30px;
-            margin: 10px 0 15px;
+            margin: 20px 0 10px;
         }
         .circle {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             background: linear-gradient(135deg, #ff3366, #ff6680);
             display: flex;
@@ -192,7 +275,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.8);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -203,35 +286,24 @@
             width: 85%;
             max-width: 350px;
             padding: 25px;
-            border: 1px solid #ff6680;
+            border: 1px solid rgba(255,215,0,0.5);
             position: relative;
         }
-        .close-modal {
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #ff6680;
-            font-weight: bold;
-        }
-        .close-modal:hover {
-            color: #ff3366;
-        }
         .modal-title {
-            color: #ff6680;
+            color: #ffd700;
             text-align: center;
             font-size: 1.4rem;
             font-weight: bold;
             margin-bottom: 20px;
         }
+        /* قائمة الأسعار */
         .pricing-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
         .pricing-item {
-            background: rgba(255,51,102,0.1);
+            background: rgba(255,255,255,0.08);
             border-radius: 12px;
             padding: 12px 15px;
             display: flex;
@@ -239,16 +311,27 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 8px;
-            border: 1px solid rgba(255,51,102,0.3);
+        }
+        .price-info {
+            flex: 2;
         }
         .price-value {
-            color: #ff6680;
+            color: #ffd700;
             font-size: 1.2rem;
             font-weight: bold;
         }
         .price-detail {
             color: #fff;
             font-size: 0.8rem;
+            margin-top: 4px;
+        }
+        .price-data {
+            color: #4caf50;
+            font-size: 0.9rem;
+            font-weight: bold;
+            background: rgba(76,175,80,0.15);
+            padding: 4px 10px;
+            border-radius: 20px;
         }
         .points-text-modal {
             color: rgba(255,255,255,0.9);
@@ -257,7 +340,7 @@
             text-align: center;
             padding: 20px 10px;
         }
-        /* نافذة المعلومات بعد التسجيل */
+        /* نافذة المعلومات بعد تسجيل الدخول */
         .info-modal {
             display: none;
             position: fixed;
@@ -276,16 +359,16 @@
             width: 90%;
             max-width: 340px;
             padding: 25px;
-            border: 1px solid #ff3366;
+            border: 1px solid rgba(255,215,0,0.5);
             text-align: center;
         }
         .info-content h3 {
-            color: #ff3366;
+            color: #ffd700;
             font-size: 1.3rem;
             margin-bottom: 15px;
         }
         .info-details {
-            background: rgba(255,51,102,0.1);
+            background: rgba(255,215,0,0.1);
             border-radius: 12px;
             padding: 15px;
             margin: 15px 0;
@@ -297,17 +380,17 @@
             margin: 8px 0;
             display: flex;
             justify-content: space-between;
-            border-bottom: 1px dashed rgba(255,51,102,0.3);
+            border-bottom: 1px dashed rgba(255,215,0,0.3);
             padding-bottom: 5px;
         }
         .info-details span:first-child {
-            color: #ff6680;
+            color: #ffd700;
             font-weight: bold;
         }
         .close-info {
-            background: #ff3366;
-            color: white;
-            border: none;
+            background: rgba(255,215,0,0.3);
+            border: 1px solid rgba(255,215,0,0.5);
+            color: #ffd700;
             padding: 10px 25px;
             border-radius: 25px;
             cursor: pointer;
@@ -333,12 +416,12 @@
             width: 85%;
             max-width: 350px;
             padding: 25px;
-            border: 1px solid #ff6680;
+            border: 1px solid rgba(255,215,0,0.5);
             position: relative;
             text-align: center;
         }
         .saved-cards-modal .modal-title {
-            color: #ff6680;
+            color: #ffd700;
             font-size: 1.4rem;
             margin-bottom: 20px;
         }
@@ -349,8 +432,8 @@
             margin: 15px 0;
         }
         .saved-card-item {
-            background: rgba(255,51,102,0.15);
-            border: 1px solid rgba(255,51,102,0.4);
+            background: rgba(255,215,0,0.1);
+            border: 1px solid rgba(255,215,0,0.4);
             border-radius: 12px;
             padding: 12px 15px;
             display: flex;
@@ -359,29 +442,19 @@
             direction: ltr;
         }
         .saved-card-code {
-            color: #ff6680;
+            color: #ffd700;
             font-size: 1.1rem;
             font-weight: bold;
         }
         .use-card-btn {
-            background: linear-gradient(135deg, #ff3366, #ff6680);
-            color: white;
-            border: none;
+            background: rgba(255,215,0,0.2);
+            border: 1px solid rgba(255,215,0,0.5);
+            color: #ffd700;
             padding: 5px 15px;
             border-radius: 20px;
             cursor: pointer;
             font-size: 0.8rem;
             font-weight: bold;
-        }
-        .clear-cards-btn {
-            background: rgba(255,68,68,0.3);
-            border: 1px solid #ff4444;
-            color: #ff8888;
-            padding: 8px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-size: 0.8rem;
         }
         .no-cards-msg {
             color: rgba(255,255,255,0.6);
@@ -390,21 +463,22 @@
         }
         @media (max-width: 480px) {
             .circle {
-                width: 60px;
-                height: 60px;
+                width: 70px;
+                height: 70px;
                 font-size: 0.8rem;
             }
             .pricing-item {
                 flex-direction: column;
                 text-align: center;
             }
-            .info-details p {
-                font-size: 0.75rem;
-            }
             .saved-cards-btn {
                 width: 45px;
                 height: 45px;
                 font-size: 1.2rem;
+            }
+            .dark-mode-container {
+                top: 8px;
+                left: 8px;
             }
         }
         .contact {
@@ -416,11 +490,6 @@
         .contact a {
             color: #ffaa66;
             text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .contact a:hover {
-            color: #ffcc88;
-            text-decoration: underline;
         }
         .bottom-info {
             text-align: center;
@@ -437,7 +506,6 @@
             margin-top: 15px;
             font-size: 12px;
             display: none;
-            animation: fadeInUp 0.5s ease;
         }
         .success-msg { border: 1px solid #4caf50; color: #4caf50; }
         .error-msg { border: 1px solid #ff4444; color: #ff8888; }
@@ -456,19 +524,26 @@
             70% { box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
             100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
         }
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .welcome-message {
+            background: linear-gradient(135deg, #ff3366, #ff6680);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
         }
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .welcome-message.show {
+            display: block;
+        }
+        .welcome-message h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .welcome-message p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            margin-bottom: 5px;
         }
         @media (max-width: 480px) {
             .login-submit {
@@ -487,10 +562,18 @@
         }
     </style>
 </head>
-<body>
+<body id="mainBody">
     <div class="cont">
         <div class="demo">
             <div class="login">
+                <!-- زر الوضع الليلي - صغير -->
+                <div class="dark-mode-container">
+                    <label class="switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
                 <div style="text-align: center;">
                     <img src="https://i.ibb.co/5wyBHwL/file-0000000085d4722fb688b595ae1d633c.png" class="logo" alt="أون لاين" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23143C5E\'/%3E%3Ctext x=\'100\' y=\'120\' text-anchor=\'middle\' fill=\'white\' font-size=\'40\' font-weight=\'bold\'%3Eأون لاين%3C/text%3E%3C/svg%3E'">
                 </div>
@@ -501,7 +584,6 @@
                 </p>
                 
                 <div class="login-form">
-                    <!-- الحقل والزر بجانب بعض -->
                     <div class="input-with-button">
                         <div class="login-row">
                             <input type="text" class="login-input" id="voucherCode" placeholder="ادخل الرمز" autocomplete="off">
@@ -537,24 +619,35 @@
     <!-- نافذة الأسعار -->
     <div id="pricesModal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('pricesModal')">&times;</span>
             <div class="modal-title">باقات الإنترنت</div>
             <div class="pricing-list">
                 <div class="pricing-item">
-                    <div class="price-value">200 ريال</div>
-                    <div class="price-detail">صلاحية يوم | 2 جيجابايت</div>
+                    <div class="price-info">
+                        <div class="price-value">200 ريال</div>
+                        <div class="price-detail">صلاحية يوم</div>
+                    </div>
+                    <div class="price-data">2 جيجابايت</div>
                 </div>
                 <div class="pricing-item">
-                    <div class="price-value">500 ريال</div>
-                    <div class="price-detail">صلاحية 4 أيام | 5 جيجابايت</div>
+                    <div class="price-info">
+                        <div class="price-value">500 ريال</div>
+                        <div class="price-detail">صلاحية 4 أيام</div>
+                    </div>
+                    <div class="price-data">5 جيجابايت</div>
                 </div>
                 <div class="pricing-item">
-                    <div class="price-value">1000 ريال</div>
-                    <div class="price-detail">صلاحية أسبوع | 12 جيجابايت</div>
+                    <div class="price-info">
+                        <div class="price-value">1000 ريال</div>
+                        <div class="price-detail">صلاحية أسبوع</div>
+                    </div>
+                    <div class="price-data">12 جيجابايت</div>
                 </div>
                 <div class="pricing-item">
-                    <div class="price-value">3000 ريال</div>
-                    <div class="price-detail">صلاحية شهر | 40 جيجابايت</div>
+                    <div class="price-info">
+                        <div class="price-value">3000 ريال</div>
+                        <div class="price-detail">صلاحية شهر</div>
+                    </div>
+                    <div class="price-data">40 جيجابايت</div>
                 </div>
             </div>
         </div>
@@ -563,7 +656,6 @@
     <!-- نافذة نقاط البيع -->
     <div id="pointsModal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('pointsModal')">&times;</span>
             <div class="modal-title">نقاط البيع</div>
             <div class="points-text-modal">
                 تتوفر كروت الشحن في جميع البقالة المجاورة للشبكة
@@ -571,7 +663,7 @@
         </div>
     </div>
     
-    <!-- نافذة معلومات الاتصال بعد تسجيل الدخول -->
+    <!-- نافذة البيانات الوهمية -->
     <div id="infoModal" class="info-modal">
         <div class="info-content">
             <h3>معلومات الاتصال</h3>
@@ -590,10 +682,8 @@
     <!-- نافذة الكروت المحفوظة -->
     <div id="savedCardsModal" class="saved-cards-modal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('savedCardsModal')">&times;</span>
             <div class="modal-title">الكروت المحفوظة</div>
             <div id="savedCardsList" class="saved-cards-list"></div>
-            <button class="clear-cards-btn" id="clearCardsBtn">مسح الكل</button>
         </div>
     </div>
     
@@ -602,6 +692,25 @@
         const voucherInput = document.getElementById('voucherCode');
         const successMsg = document.getElementById('successMsg');
         const errorMsg = document.getElementById('errorMsg');
+        
+        // الوضع الليلي
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+        
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+        
+        darkModeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
         
         // الكروت المحفوظة
         const STORAGE_KEY = 'saved_voucher_codes';
@@ -647,48 +756,24 @@
             });
         }
         
-        function clearAllCards() {
-            savedCodes = [];
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedCodes));
-            renderSavedCardsModal();
-        }
-        
         document.getElementById('savedCardsBtn').onclick = () => {
             renderSavedCardsModal();
             document.getElementById('savedCardsModal').style.display = 'flex';
         };
-        document.getElementById('clearCardsBtn').onclick = clearAllCards;
         
-        // تحويل الحروف الإنجليزية الكبيرة إلى صغيرة أثناء الكتابة
+        // تحويل الحروف الإنجليزية الكبيرة إلى صغيرة
         voucherInput.addEventListener('input', function(e) {
-            let currentValue = this.value;
-            let lowerValue = currentValue.replace(/[A-Z]/g, function(match) {
-                return match.toLowerCase();
-            });
-            if (currentValue !== lowerValue) {
-                this.value = lowerValue;
-            }
+            this.value = this.value.replace(/[A-Z]/g, m => m.toLowerCase());
         });
         
         // فتح النوافذ
-        document.getElementById('pricesBtn').onclick = function() {
-            document.getElementById('pricesModal').style.display = 'flex';
-        };
-        document.getElementById('pointsBtn').onclick = function() {
-            document.getElementById('pointsModal').style.display = 'flex';
-        };
+        document.getElementById('pricesBtn').onclick = () => document.getElementById('pricesModal').style.display = 'flex';
+        document.getElementById('pointsBtn').onclick = () => document.getElementById('pointsModal').style.display = 'flex';
         
-        // إغلاق النوافذ بالضغط خارجها
         window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
-            }
-            if (event.target.classList.contains('info-modal')) {
-                event.target.style.display = 'none';
-            }
-            if (event.target.classList.contains('saved-cards-modal')) {
-                event.target.style.display = 'none';
-            }
+            if (event.target.classList.contains('modal')) event.target.style.display = 'none';
+            if (event.target.classList.contains('info-modal')) event.target.style.display = 'none';
+            if (event.target.classList.contains('saved-cards-modal')) event.target.style.display = 'none';
         };
         
         function closeModal(modalId) {
