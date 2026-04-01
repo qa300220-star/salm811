@@ -1,1 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أون لاين</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        * { font-family: 'Cairo', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 to-slate-800 min-h-screen flex items-center justify-center p-5">
 
+    <div x-data="app()" class="w-full max-w-md">
+        <!-- البطاقة الرئيسية -->
+        <div class="bg-white/10 backdrop-blur-lg rounded-3xl p-6 shadow-2xl border border-yellow-500/30 transform transition-all hover:scale-[1.02] duration-300">
+            
+            <!-- الرأس -->
+            <div class="text-center mb-6">
+                <i class="fas fa-wifi text-5xl text-yellow-500 mb-3 animate-pulse"></i>
+                <h1 class="text-3xl font-bold text-yellow-500">أون لاين</h1>
+                <p class="text-gray-400 text-sm mt-1">نت لاسلكي سريع | تغطية شاملة</p>
+                <div class="flex justify-center items-center gap-2 mt-2">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="text-gray-500 text-xs">الشبكة متاحة</span>
+                </div>
+            </div>
+            
+            <!-- حقل الإدخال وزر الحفظ -->
+            <div class="flex gap-3 mb-5">
+                <input type="text" x-model="code" placeholder="ادخل الرمز" 
+                    class="flex-1 bg-white/10 border-b-2 border-yellow-600/50 focus:border-yellow-400 text-white text-center py-3 px-4 rounded-lg outline-none transition-all">
+                <button @click="saveCode()" class="bg-yellow-500 w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition">
+                    <i class="fas fa-bookmark text-gray-800"></i>
+                </button>
+            </div>
+            
+            <!-- زر تسجيل الدخول -->
+            <button @click="login()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-full text-lg shadow-lg transform hover:-translate-y-0.5 transition-all mb-6">
+                <i class="fas fa-sign-in-alt ml-2"></i> تسجيل الدخول
+            </button>
+            
+            <!-- أزرار إضافية -->
+            <div class="flex gap-4 mb-6">
+                <button @click="showPrices = true" class="flex-1 py-2 border border-yellow-600/50 rounded-full text-yellow-500 font-bold hover:bg-yellow-600/20 transition">
+                    <i class="fas fa-tag ml-1"></i> الأسعار
+                </button>
+                <button @click="showPoints = true" class="flex-1 py-2 border border-yellow-600/50 rounded-full text-yellow-500 font-bold hover:bg-yellow-600/20 transition">
+                    <i class="fas fa-store ml-1"></i> نقاط البيع
+                </button>
+            </div>
+            
+            <!-- جهات الاتصال -->
+            <div class="text-center border-t border-white/10 pt-4">
+                <p class="text-gray-400 text-sm">للاستفسار والدعم:</p>
+                <a href="tel:774629815" class="text-yellow-500 font-bold text-lg">774629815</a>
+                <p class="text-gray-600 text-xs mt-3">تطوير سالم</p>
+            </div>
+        </div>
+        
+        <!-- نافذة الأسعار -->
+        <div x-show="showPrices" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-5" x-cloak @click.away="showPrices = false">
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 w-full max-w-sm border border-yellow-500/50">
+                <div class="flex justify-between mb-4">
+                    <h2 class="text-yellow-500 text-xl font-bold">باقات الإنترنت</h2>
+                    <button @click="showPrices = false" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl"><div><div class="text-yellow-500 font-bold">200 ريال</div><div class="text-gray-400 text-sm">صلاحية يوم</div></div><div class="text-green-500">2 جيجابايت</div></div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl"><div><div class="text-yellow-500 font-bold">500 ريال</div><div class="text-gray-400 text-sm">صلاحية 4 أيام</div></div><div class="text-green-500">5 جيجابايت</div></div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl"><div><div class="text-yellow-500 font-bold">1000 ريال</div><div class="text-gray-400 text-sm">صلاحية أسبوع</div></div><div class="text-green-500">12 جيجابايت</div></div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl"><div><div class="text-yellow-500 font-bold">3000 ريال</div><div class="text-gray-400 text-sm">صلاحية شهر</div></div><div class="text-green-500">40 جيجابايت</div></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- نافذة نقاط البيع -->
+        <div x-show="showPoints" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-5" x-cloak @click.away="showPoints = false">
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 w-full max-w-sm border border-yellow-500/50">
+                <div class="flex justify-between mb-4">
+                    <h2 class="text-yellow-500 text-xl font-bold">نقاط البيع</h2>
+                    <button @click="showPoints = false" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
+                <p class="text-white text-center py-6">تتوفر كروت الشحن في جميع البقالة المجاورة للشبكة</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function app() {
+            return {
+                code: '',
+                showPrices: false,
+                showPoints: false,
+                savedCodes: [],
+                
+                init() {
+                    const stored = localStorage.getItem('savedCodes');
+                    if (stored) this.savedCodes = JSON.parse(stored).slice(0, 2);
+                },
+                
+                saveCode() {
+                    if (!this.code.trim()) return;
+                    this.savedCodes = [this.code, ...this.savedCodes.filter(c => c !== this.code)].slice(0, 2);
+                    localStorage.setItem('savedCodes', JSON.stringify(this.savedCodes));
+                },
+                
+                login() {
+                    if (!this.code.trim()) {
+                        Swal.fire({ icon: 'error', title: 'خطأ', text: 'يرجى إدخال الرمز', background: '#1e293b', color: '#fff', confirmButtonColor: '#eab308' });
+                        return;
+                    }
+                    this.saveCode();
+                    Swal.fire({ icon: 'success', title: 'تم بنجاح', text: 'تم توصيل الإنترنت', timer: 2000, showConfirmButton: false, background: '#1e293b', color: '#fff' });
+                    this.code = '';
+                    setTimeout(() => {
+                        Swal.fire({ title: 'معلومات الاتصال', html: `
+                            <div style="text-align:right"><p>عنوان الشبكة: 172.31.3.186</p>
+                            <p>التنزيل: 6 كيلوبايت</p><p>الرفع: 8 كيلوبايت</p>
+                            <p>التحميل المتبقي: 15 جيجابايت</p>
+                            <p>الوقت المستهلك: 7 ثانية</p>
+                            <p>المدة المتبقية: 16 يوم 13 ساعة 52 دقيقة</p></div>`,
+                            background: '#1e293b', color: '#fff', confirmButtonColor: '#eab308' });
+                    }, 2000);
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</body>
+</html>
