@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أون لاين</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>أون لاين | إنترنت لاسلكي</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,81 +20,189 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
         * { font-family: 'Cairo', sans-serif; }
+        
+        /* تأثيرات حركية مخصصة */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(234, 179, 8, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.6); }
+        }
+        .glow-effect {
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        /* الوضع الليلي */
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
+            transition: background 0.4s ease;
+        }
+        body.dark-mode {
+            background: linear-gradient(135deg, #030712, #0a0a0a);
+        }
+        body.dark-mode .card-glass {
+            background: rgba(0, 0, 0, 0.6) !important;
+            border-color: #334155 !important;
+        }
+        body.dark-mode .text-muted {
+            color: #94a3b8 !important;
+        }
+        
+        .card-glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+        
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #eab308;
+            border-radius: 10px;
+        }
+        
+        [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 to-slate-800 min-h-screen flex items-center justify-center p-5">
+<body class="min-h-screen flex items-center justify-center p-5 transition-all duration-500">
 
-    <div x-data="app()" class="w-full max-w-md">
+    <div x-data="app()" x-init="init()" class="w-full max-w-md" x-cloak>
         <!-- البطاقة الرئيسية -->
-        <div class="bg-white/10 backdrop-blur-lg rounded-3xl p-6 shadow-2xl border border-yellow-500/30 transform transition-all hover:scale-[1.02] duration-300">
+        <div class="card-glass rounded-3xl p-6 shadow-2xl border border-yellow-500/40 transform transition-all duration-500 hover:scale-[1.01] relative overflow-hidden">
+            
+            <!-- خلفية متحركة -->
+            <div class="absolute inset-0 opacity-10 pointer-events-none">
+                <div class="absolute top-0 right-0 w-40 h-40 bg-yellow-500 rounded-full blur-3xl animate-pulse"></div>
+                <div class="absolute bottom-0 left-0 w-40 h-40 bg-yellow-500 rounded-full blur-3xl animate-pulse delay-1000"></div>
+            </div>
+            
+            <!-- زر الوضع الليلي -->
+            <button @click="toggleDarkMode()" class="absolute top-4 left-4 z-10 w-10 h-10 rounded-full bg-yellow-500/20 hover:bg-yellow-500/40 transition-all duration-300 flex items-center justify-center text-yellow-500 backdrop-blur-sm">
+                <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg transition-all"></i>
+            </button>
             
             <!-- الرأس -->
-            <div class="text-center mb-6">
-                <i class="fas fa-wifi text-5xl text-yellow-500 mb-3 animate-pulse"></i>
-                <h1 class="text-3xl font-bold text-yellow-500">أون لاين</h1>
-                <p class="text-gray-400 text-sm mt-1">نت لاسلكي سريع | تغطية شاملة</p>
-                <div class="flex justify-center items-center gap-2 mt-2">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    <span class="text-gray-500 text-xs">الشبكة متاحة</span>
+            <div class="text-center mb-6 relative">
+                <div class="inline-block p-4 rounded-full bg-yellow-500/20 mb-3 float-animation">
+                    <i class="fas fa-wifi text-5xl text-yellow-500"></i>
+                </div>
+                <h1 class="text-4xl font-black text-yellow-500 tracking-wider">أون لاين</h1>
+                <p class="text-gray-300 text-sm mt-2">نت لاسلكي سريع | تغطية شاملة</p>
+                <div class="flex justify-center items-center gap-2 mt-3">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                    <span class="text-gray-400 text-xs">الشبكة متاحة</span>
                 </div>
             </div>
             
             <!-- حقل الإدخال وزر الحفظ -->
-            <div class="flex gap-3 mb-5">
-                <input type="text" x-model="code" placeholder="ادخل الرمز" 
-                    class="flex-1 bg-white/10 border-b-2 border-yellow-600/50 focus:border-yellow-400 text-white text-center py-3 px-4 rounded-lg outline-none transition-all">
-                <button @click="saveCode()" class="bg-yellow-500 w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition">
-                    <i class="fas fa-bookmark text-gray-800"></i>
+            <div class="flex gap-3 mb-4">
+                <div class="flex-1 relative">
+                    <input type="text" x-model="code" @keyup.enter="login()" placeholder="ادخل الرمز" 
+                        class="w-full bg-white/10 border-b-2 border-yellow-600/50 focus:border-yellow-400 text-white text-center py-3 px-4 rounded-lg outline-none transition-all duration-300 focus:bg-white/20">
+                    <i class="fas fa-key absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm"></i>
+                </div>
+                <button @click="saveCurrentCode()" class="bg-yellow-500 hover:bg-yellow-600 w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 group">
+                    <i class="fas fa-bookmark text-gray-900 group-hover:scale-110 transition"></i>
                 </button>
             </div>
             
+            <!-- عرض الكروت المحفوظة -->
+            <div x-show="savedCodes.length > 0" class="mb-4" x-transition.duration.300ms>
+                <p class="text-yellow-500 text-xs text-center mb-2">
+                    <i class="fas fa-history ml-1"></i> الكروت المحفوظة
+                </p>
+                <div class="flex gap-2 justify-center flex-wrap">
+                    <template x-for="(savedCode, idx) in savedCodes" :key="idx">
+                        <button @click="useSavedCode(savedCode)" 
+                            class="bg-yellow-500/20 hover:bg-yellow-500/40 text-yellow-400 px-3 py-1.5 rounded-full text-sm transition-all duration-300 flex items-center gap-1 border border-yellow-500/30">
+                            <i class="fas fa-ticket-alt text-xs"></i>
+                            <span x-text="savedCode"></span>
+                        </button>
+                    </template>
+                </div>
+            </div>
+            
             <!-- زر تسجيل الدخول -->
-            <button @click="login()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-full text-lg shadow-lg transform hover:-translate-y-0.5 transition-all mb-6">
+            <button @click="login()" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 font-bold py-3 rounded-full text-lg shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 mb-6 glow-effect">
                 <i class="fas fa-sign-in-alt ml-2"></i> تسجيل الدخول
             </button>
             
             <!-- أزرار إضافية -->
             <div class="flex gap-4 mb-6">
-                <button @click="showPrices = true" class="flex-1 py-2 border border-yellow-600/50 rounded-full text-yellow-500 font-bold hover:bg-yellow-600/20 transition">
+                <button @click="showPrices = true" class="flex-1 py-2.5 border border-yellow-500/50 rounded-full text-yellow-500 font-bold hover:bg-yellow-500/20 transition-all duration-300">
                     <i class="fas fa-tag ml-1"></i> الأسعار
                 </button>
-                <button @click="showPoints = true" class="flex-1 py-2 border border-yellow-600/50 rounded-full text-yellow-500 font-bold hover:bg-yellow-600/20 transition">
+                <button @click="showPoints = true" class="flex-1 py-2.5 border border-yellow-500/50 rounded-full text-yellow-500 font-bold hover:bg-yellow-500/20 transition-all duration-300">
                     <i class="fas fa-store ml-1"></i> نقاط البيع
                 </button>
             </div>
             
             <!-- جهات الاتصال -->
             <div class="text-center border-t border-white/10 pt-4">
-                <p class="text-gray-400 text-sm">للاستفسار والدعم:</p>
-                <a href="tel:774629815" class="text-yellow-500 font-bold text-lg">774629815</a>
-                <p class="text-gray-600 text-xs mt-3">تطوير سالم</p>
+                <p class="text-gray-400 text-sm mb-1">
+                    <i class="fas fa-headset ml-1"></i> للاستفسار والدعم
+                </p>
+                <a href="tel:774629815" class="text-yellow-500 font-bold text-xl hover:scale-105 inline-block transition">
+                    <i class="fas fa-phone-alt ml-2 text-sm"></i> 774629815
+                </a>
+                <p class="text-gray-600 text-xs mt-3">
+                    <i class="fas fa-code ml-1"></i> تطوير سالم
+                </p>
             </div>
         </div>
         
         <!-- نافذة الأسعار -->
-        <div x-show="showPrices" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-5" x-cloak @click.away="showPrices = false">
-            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 w-full max-w-sm border border-yellow-500/50">
-                <div class="flex justify-between mb-4">
-                    <h2 class="text-yellow-500 text-xl font-bold">باقات الإنترنت</h2>
-                    <button @click="showPrices = false" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        <div x-show="showPrices" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-5" x-cloak @click.away="showPrices = false" x-transition.opacity.duration.300>
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 w-full max-w-sm border border-yellow-500/50 transform transition-all" x-show="showPrices" x-transition.scale.origin.center>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-yellow-500 text-xl font-bold flex items-center gap-2">
+                        <i class="fas fa-tags"></i> باقات الإنترنت
+                    </h2>
+                    <button @click="showPrices = false" class="text-gray-400 hover:text-white hover:bg-white/10 w-8 h-8 rounded-full transition text-xl">&times;</button>
                 </div>
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl"><div><div class="text-yellow-500 font-bold">200 ريال</div><div class="text-gray-400 text-sm">صلاحية يوم</div></div><div class="text-green-500">2 جيجابايت</div></div>
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl"><div><div class="text-yellow-500 font-bold">500 ريال</div><div class="text-gray-400 text-sm">صلاحية 4 أيام</div></div><div class="text-green-500">5 جيجابايت</div></div>
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl"><div><div class="text-yellow-500 font-bold">1000 ريال</div><div class="text-gray-400 text-sm">صلاحية أسبوع</div></div><div class="text-green-500">12 جيجابايت</div></div>
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl"><div><div class="text-yellow-500 font-bold">3000 ريال</div><div class="text-gray-400 text-sm">صلاحية شهر</div></div><div class="text-green-500">40 جيجابايت</div></div>
+                <div class="space-y-3 max-h-96 overflow-y-auto">
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition"><div><div class="text-yellow-500 font-bold text-lg">200 ريال</div><div class="text-gray-400 text-sm">صلاحية يوم</div></div><div class="text-green-500 font-bold">2 جيجابايت</div></div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition"><div><div class="text-yellow-500 font-bold text-lg">500 ريال</div><div class="text-gray-400 text-sm">صلاحية 4 أيام</div></div><div class="text-green-500 font-bold">5 جيجابايت</div></div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition"><div><div class="text-yellow-500 font-bold text-lg">1000 ريال</div><div class="text-gray-400 text-sm">صلاحية أسبوع</div></div><div class="text-green-500 font-bold">12 جيجابايت</div></div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition"><div><div class="text-yellow-500 font-bold text-lg">3000 ريال</div><div class="text-gray-400 text-sm">صلاحية شهر</div></div><div class="text-green-500 font-bold">40 جيجابايت</div></div>
                 </div>
             </div>
         </div>
         
         <!-- نافذة نقاط البيع -->
-        <div x-show="showPoints" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-5" x-cloak @click.away="showPoints = false">
-            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 w-full max-w-sm border border-yellow-500/50">
-                <div class="flex justify-between mb-4">
-                    <h2 class="text-yellow-500 text-xl font-bold">نقاط البيع</h2>
-                    <button @click="showPoints = false" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        <div x-show="showPoints" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-5" x-cloak @click.away="showPoints = false" x-transition.opacity.duration.300>
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 w-full max-w-sm border border-yellow-500/50" x-show="showPoints" x-transition.scale.origin.center>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-yellow-500 text-xl font-bold flex items-center gap-2">
+                        <i class="fas fa-store"></i> نقاط البيع
+                    </h2>
+                    <button @click="showPoints = false" class="text-gray-400 hover:text-white hover:bg-white/10 w-8 h-8 rounded-full transition text-xl">&times;</button>
                 </div>
-                <p class="text-white text-center py-6">تتوفر كروت الشحن في جميع البقالة المجاورة للشبكة</p>
+                <div class="text-center py-8">
+                    <i class="fas fa-map-marker-alt text-yellow-500 text-4xl mb-3"></i>
+                    <p class="text-white text-lg font-medium">تتوفر كروت الشحن</p>
+                    <p class="text-gray-300 mt-2">في جميع البقالة المجاورة للشبكة</p>
+                    <div class="mt-4 flex justify-center gap-2">
+                        <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                        <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                        <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -106,42 +214,148 @@
                 showPrices: false,
                 showPoints: false,
                 savedCodes: [],
+                darkMode: false,
                 
                 init() {
+                    // تحميل الكروت المحفوظة
                     const stored = localStorage.getItem('savedCodes');
-                    if (stored) this.savedCodes = JSON.parse(stored).slice(0, 2);
+                    if (stored) {
+                        this.savedCodes = JSON.parse(stored).slice(0, 2);
+                    }
+                    
+                    // تحميل وضع الليل
+                    const darkModeStored = localStorage.getItem('darkMode');
+                    if (darkModeStored === 'true') {
+                        this.darkMode = true;
+                        document.body.classList.add('dark-mode');
+                    }
+                    
+                    // عرض تذكير إذا كان فيه كروت محفوظة
+                    if (this.savedCodes.length > 0) {
+                        setTimeout(() => {
+                            Swal.fire({
+                                icon: 'info',
+                                title: '📌 تذكير',
+                                html: `لديك <strong class="text-yellow-500">${this.savedCodes.length}</strong> كرت محفوظ<br>اضغط على الكرت لاستخدامه`,
+                                toast: true,
+                                position: 'top',
+                                showConfirmButton: false,
+                                timer: 4000,
+                                background: '#1e293b',
+                                color: '#fff',
+                                iconColor: '#eab308'
+                            });
+                        }, 500);
+                    }
                 },
                 
-                saveCode() {
-                    if (!this.code.trim()) return;
+                saveCurrentCode() {
+                    if (!this.code.trim()) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'خطأ',
+                            text: 'لا يوجد رمز للحفظ',
+                            background: '#1e293b',
+                            color: '#fff',
+                            confirmButtonColor: '#eab308'
+                        });
+                        return;
+                    }
+                    
                     this.savedCodes = [this.code, ...this.savedCodes.filter(c => c !== this.code)].slice(0, 2);
                     localStorage.setItem('savedCodes', JSON.stringify(this.savedCodes));
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'تم الحفظ',
+                        text: 'تم حفظ الرمز بنجاح',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        background: '#1e293b',
+                        color: '#fff'
+                    });
+                },
+                
+                useSavedCode(savedCode) {
+                    this.code = savedCode;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'تم',
+                        text: `تم وضع الرمز ${savedCode} في الحقل`,
+                        timer: 1500,
+                        showConfirmButton: false,
+                        background: '#1e293b',
+                        color: '#fff'
+                    });
                 },
                 
                 login() {
                     if (!this.code.trim()) {
-                        Swal.fire({ icon: 'error', title: 'خطأ', text: 'يرجى إدخال الرمز', background: '#1e293b', color: '#fff', confirmButtonColor: '#eab308' });
+                        Swal.fire({
+                            icon: 'error',
+                            title: '⚠️ خطأ',
+                            text: 'يرجى إدخال الرمز',
+                            background: '#1e293b',
+                            color: '#fff',
+                            confirmButtonColor: '#eab308',
+                            confirmButtonText: 'حسناً'
+                        });
                         return;
                     }
-                    this.saveCode();
-                    Swal.fire({ icon: 'success', title: 'تم بنجاح', text: 'تم توصيل الإنترنت', timer: 2000, showConfirmButton: false, background: '#1e293b', color: '#fff' });
+                    
+                    // حفظ الرمز الحالي إذا لم يكن محفوظاً
+                    if (!this.savedCodes.includes(this.code)) {
+                        this.savedCodes = [this.code, ...this.savedCodes].slice(0, 2);
+                        localStorage.setItem('savedCodes', JSON.stringify(this.savedCodes));
+                    }
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: '✅ تم بنجاح',
+                        text: 'تم توصيل الإنترنت',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        background: '#1e293b',
+                        color: '#fff'
+                    });
+                    
+                    const enteredCode = this.code;
                     this.code = '';
+                    
                     setTimeout(() => {
-                        Swal.fire({ title: 'معلومات الاتصال', html: `
-                            <div style="text-align:right"><p>عنوان الشبكة: 172.31.3.186</p>
-                            <p>التنزيل: 6 كيلوبايت</p><p>الرفع: 8 كيلوبايت</p>
-                            <p>التحميل المتبقي: 15 جيجابايت</p>
-                            <p>الوقت المستهلك: 7 ثانية</p>
-                            <p>المدة المتبقية: 16 يوم 13 ساعة 52 دقيقة</p></div>`,
-                            background: '#1e293b', color: '#fff', confirmButtonColor: '#eab308' });
+                        Swal.fire({
+                            title: '📡 معلومات الاتصال',
+                            html: `
+                                <div class="text-right space-y-2" style="direction: rtl">
+                                    <div class="flex justify-between border-b border-gray-700 pb-2"><span class="text-yellow-500">🌐 عنوان الشبكة:</span><span class="text-white">172.31.3.186</span></div>
+                                    <div class="flex justify-between border-b border-gray-700 pb-2"><span class="text-yellow-500">⬇️ التنزيل:</span><span class="text-white">6 كيلوبايت</span></div>
+                                    <div class="flex justify-between border-b border-gray-700 pb-2"><span class="text-yellow-500">⬆️ الرفع:</span><span class="text-white">8 كيلوبايت</span></div>
+                                    <div class="flex justify-between border-b border-gray-700 pb-2"><span class="text-yellow-500">💾 التحميل المتبقي:</span><span class="text-white">15 جيجابايت</span></div>
+                                    <div class="flex justify-between border-b border-gray-700 pb-2"><span class="text-yellow-500">⏱️ الوقت المستهلك:</span><span class="text-white">7 ثانية</span></div>
+                                    <div class="flex justify-between"><span class="text-yellow-500">📅 المدة المتبقية:</span><span class="text-white">16 يوم 13 ساعة 52 دقيقة</span></div>
+                                </div>
+                            `,
+                            background: '#1e293b',
+                            color: '#fff',
+                            confirmButtonColor: '#eab308',
+                            confirmButtonText: 'حسناً',
+                            width: '380px'
+                        });
                     }, 2000);
+                },
+                
+                toggleDarkMode() {
+                    this.darkMode = !this.darkMode;
+                    if (this.darkMode) {
+                        document.body.classList.add('dark-mode');
+                        localStorage.setItem('darkMode', 'true');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                        localStorage.setItem('darkMode', 'false');
+                    }
                 }
             }
         }
     </script>
-    
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
 </body>
 </html>
