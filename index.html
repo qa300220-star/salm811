@@ -1,611 +1,667 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>أون لاين | إنترنت لاسلكي</title>
+    <meta name="theme-color" content="#091527">
+    <title>أون لاين</title>
     
-    <!-- المكتبات -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- صورة الموقع -->
+    <meta property="og:title" content="أون لاين | إنترنت لاسلكي">
+    <meta property="og:description" content="نت لاسلكي سريع | تغطية شاملة | كروت شحن متوفرة">
+    <meta property="og:image" content="https://i.ibb.co/QWmRVXW/Screenshot.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- مكتبات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
+        @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap');
+        *, :after, :before {
+            font-family: 'Almarai', sans-serif, Arial;
             box-sizing: border-box;
+            margin: 0;
+            padding: 0
         }
-        
+        body, html {
+            font-size: 80.5%;
+            height: 100%;
+            transition: background 0.3s ease;
+            direction: rtl;
+        }
         body {
             background: linear-gradient(135deg, #0a1928, #0d2a3a);
+        }
+        body.dark-mode {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+        }
+        body.dark-mode .login {
+            background: rgba(0,0,0,0.7);
+            border-color: rgba(100,100,100,0.5);
+        }
+        body.dark-mode .login-input { color: #eee; }
+        body.dark-mode .info { color: #ddd; }
+        body.dark-mode .price-detail { color: #ccc; }
+        body.dark-mode .points-text-modal { color: #ddd; }
+        body.dark-mode .contact { color: #aaa; }
+        body.dark-mode .bottom-info { color: #888; }
+        body.dark-mode .modal-content { background: linear-gradient(135deg, #111, #1a1a2e); }
+        body.dark-mode .info-content { background: linear-gradient(135deg, #111, #1a1a2e); }
+        
+        @media (max-width: 768px) { body, html { font-size: 65% } }
+        button, input { outline: 0; border: none }
+        
+        .cont {
+            position: relative;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: 0.3s;
         }
-        
-        body.dark {
-            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
-        }
-        
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 30px 25px;
-            width: 100%;
-            max-width: 400px;
-            border: 1px solid rgba(255, 215, 0, 0.4);
-            transition: 0.3s;
+        .demo {
             position: relative;
+            width: 30rem;
+            margin: 2rem auto;
+            border-radius: 20px;
         }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255, 215, 0, 0.7);
+        .login {
+            position: relative;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px 20px;
+            border: 1px solid rgba(255,215,0,0.3);
+            transition: transform 0.3s ease;
         }
+        .login:hover { transform: translateY(-5px); }
         
         /* زر الوضع الليلي */
-        .theme-btn {
+        .dark-mode-container {
             position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+            top: 12px;
+            left: 12px;
+            z-index: 10;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
             cursor: pointer;
-            color: white;
-            font-size: 1.2rem;
-            transition: 0.3s;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 34px;
         }
-        
-        .theme-btn:hover {
-            background: rgba(255, 215, 0, 0.5);
-            transform: scale(1.05);
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
+        .switch input:checked + .slider { background-color: #2196F3; }
+        .switch input:checked + .slider:before { transform: translateX(22px); }
         
         .logo {
+            max-width: 200px;
+            width: 80%;
+            display: block;
+            margin: 0 auto 20px auto;
+            border-radius: 18px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .info {
+            color: #fff;
             text-align: center;
             margin-bottom: 20px;
+            font-size: 14px;
         }
+        .login-form { text-align: center; padding: 1.5rem 1rem; }
         
-        .logo i {
-            font-size: 3.5rem;
-            color: #ffd700;
-            background: rgba(255, 215, 0, 0.2);
-            padding: 20px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        
-        h1 {
-            text-align: center;
-            color: #ffd700;
-            font-size: 2rem;
-            margin: 15px 0 5px;
-        }
-        
-        .sub {
-            text-align: center;
-            color: #aaa;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-        }
-        
-        .status {
-            text-align: center;
+        .input-with-button {
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 25px;
-        }
-        
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: #4caf50;
-            border-radius: 50%;
-            animation: pulse 1s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        /* حقل الإدخال */
-        .input-group {
-            display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 20px;
         }
-        
-        .input-group input {
+        .login-row {
             flex: 1;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-bottom: 2px solid rgba(255, 215, 0, 0.5);
-            padding: 12px;
-            color: white;
-            font-size: 1rem;
+            height: 5rem;
+            padding-top: 1rem;
+            border-bottom: 1px solid rgba(255,215,0,0.5);
+        }
+        .login-input {
+            direction: ltr;
             text-align: center;
-            border-radius: 12px;
+            width: 100%;
+            height: 100%;
+            padding: 0 1rem;
+            font-size: 1.5rem;
+            background: 0 0;
+            color: #fff;
         }
+        .login-input::placeholder { color: rgba(255,255,255,0.6); }
         
-        .input-group input:focus {
-            outline: none;
-            border-bottom-color: #ffd700;
-        }
-        
-        .save-btn {
+        .saved-cards-btn {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             background: linear-gradient(135deg, #ff3366, #ff6680);
-            border: none;
             cursor: pointer;
             color: white;
-            font-size: 1.2rem;
-            transition: 0.3s;
-        }
-        
-        .save-btn:hover {
-            transform: scale(1.05);
-        }
-        
-        /* زر تسجيل الدخول */
-        .login-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #ff3366, #ff6680);
-            border: none;
-            padding: 14px;
-            border-radius: 50px;
-            color: white;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 20px;
-            transition: 0.3s;
-        }
-        
-        .login-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        /* أزرار إضافية */
-        .action-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .action-btn {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.5);
-            padding: 10px;
-            border-radius: 50px;
-            color: #ffd700;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            transition: 0.3s;
-        }
-        
-        .action-btn:hover {
-            background: rgba(255, 215, 0, 0.2);
-        }
-        
-        /* أيقونات التواصل */
-        .social {
-            margin: 20px 0;
-            text-align: center;
-        }
-        
-        .social p {
-            color: #888;
-            font-size: 0.8rem;
-            margin-bottom: 12px;
-        }
-        
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        
-        .social-icons a {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 4px 12px rgba(255,51,102,0.3);
+            transition: all 0.3s ease;
+        }
+        .saved-cards-btn:hover { transform: scale(1.05); }
+        
+        .login-submit {
+            width: 100%;
+            height: 4rem;
+            margin: 2rem 0 1rem;
             color: white;
-            font-size: 1.2rem;
-            text-decoration: none;
-            transition: 0.3s;
+            background: linear-gradient(135deg, #ff3366, #ff6680);
+            font-size: 1.5rem;
+            border-radius: 3rem;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255,51,102,0.3);
+            transition: all 0.3s ease;
+        }
+        .login-submit:hover { transform: translateY(-2px); }
+        
+        .circle-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0 10px;
+        }
+        .circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff3366, #ff6680);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(255,51,102,0.3);
+            transition: all 0.3s ease;
+        }
+        .circle:hover { transform: scale(1.05); }
+        
+        /* النوافذ المنبثقة */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: linear-gradient(135deg, #0a1928, #0d2a3a);
+            border-radius: 20px;
+            width: 85%;
+            max-width: 350px;
+            padding: 25px;
+            border: 1px solid rgba(255,215,0,0.5);
+        }
+        .modal-title {
+            color: #ffd700;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
         
-        .social-icons a:hover {
-            transform: translateY(-3px);
+        .pricing-list { display: flex; flex-direction: column; gap: 12px; }
+        .pricing-item {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .price-value { color: #ffd700; font-size: 1.2rem; font-weight: bold; }
+        .price-detail { color: #fff; font-size: 0.8rem; margin-top: 4px; }
+        .price-data { color: #4caf50; font-size: 0.9rem; font-weight: bold; background: rgba(76,175,80,0.15); padding: 4px 10px; border-radius: 20px; }
+        .points-text-modal { color: rgba(255,255,255,0.9); font-size: 1rem; line-height: 1.7; text-align: center; padding: 20px 10px; }
+        
+        /* نافذة المعلومات */
+        .info-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+        }
+        .info-content {
+            background: linear-gradient(135deg, #0a1928, #0d2a3a);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 340px;
+            padding: 25px;
+            border: 1px solid rgba(255,215,0,0.5);
+            text-align: center;
+        }
+        .info-content h3 { color: #ffd700; font-size: 1.3rem; margin-bottom: 15px; }
+        .info-details {
+            background: rgba(255,215,0,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: right;
+        }
+        .info-details p {
+            color: white;
+            font-size: 0.85rem;
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed rgba(255,215,0,0.3);
+            padding-bottom: 5px;
+        }
+        .info-details span:first-child { color: #ffd700; font-weight: bold; }
+        .close-info {
+            background: rgba(255,215,0,0.3);
+            border: 1px solid rgba(255,215,0,0.5);
+            color: #ffd700;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 1rem;
         }
         
-        .social-icons .ig:hover { background: #E4405F; }
-        .social-icons .tt:hover { background: #000; color: #00f2ea; }
-        .social-icons .fb:hover { background: #1877F2; }
-        .social-icons .wa:hover { background: #25D366; }
-        .social-icons .tw:hover { background: #1DA1F2; }
-        .social-icons .yt:hover { background: #FF0000; }
+        /* نافذة الكروت المحفوظة */
+        .saved-cards-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+        }
+        .saved-cards-modal .modal-content {
+            background: linear-gradient(135deg, #0a1928, #0d2a3a);
+            border-radius: 20px;
+            width: 85%;
+            max-width: 350px;
+            padding: 25px;
+            border: 1px solid rgba(255,215,0,0.5);
+            text-align: center;
+        }
+        .saved-cards-modal .modal-title { color: #ffd700; font-size: 1.4rem; margin-bottom: 20px; }
+        .saved-cards-list { display: flex; flex-direction: column; gap: 12px; margin: 15px 0; }
+        .saved-card-item {
+            background: rgba(255,215,0,0.1);
+            border: 1px solid rgba(255,215,0,0.4);
+            border-radius: 12px;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            direction: ltr;
+        }
+        .saved-card-code { color: #ffd700; font-size: 1.1rem; font-weight: bold; }
+        .use-card-btn {
+            background: rgba(255,215,0,0.2);
+            border: 1px solid rgba(255,215,0,0.5);
+            color: #ffd700;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .no-cards-msg { color: rgba(255,255,255,0.6); font-size: 0.9rem; padding: 20px; }
         
-        /* جهات الاتصال */
+        @media (max-width: 480px) {
+            .circle { width: 70px; height: 70px; font-size: 0.8rem; }
+            .pricing-item { flex-direction: column; text-align: center; }
+            .saved-cards-btn { width: 45px; height: 45px; font-size: 1.2rem; }
+        }
+        
         .contact {
             text-align: center;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
         }
-        
-        .contact p {
-            color: #aaa;
-            font-size: 0.8rem;
-            margin-bottom: 8px;
-        }
-        
-        .contact a {
-            color: #ffd700;
-            font-size: 1.1rem;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-block;
-            margin: 5px 0;
-        }
-        
-        .whatsapp {
+        .contact a { color: #ffaa66; text-decoration: none; }
+        .whatsapp-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             background: #25D366;
             color: white;
-            padding: 8px 20px;
+            padding: 8px 18px;
             border-radius: 50px;
             font-size: 0.9rem;
-            margin-top: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 5px;
         }
-        
-        .whatsapp:hover {
-            background: #128C7E;
+        .whatsapp-link:hover {
             transform: scale(1.05);
+            background: #128C7E;
         }
+        .bottom-info { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); font-size: 11px; }
         
-        .footer {
-            text-align: center;
-            margin-top: 12px;
-            color: #666;
-            font-size: 0.7rem;
-        }
-        
-        /* النوافذ */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-box {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            border-radius: 24px;
-            width: 90%;
-            max-width: 350px;
-            padding: 25px;
-            border: 1px solid rgba(255, 215, 0, 0.5);
-        }
-        
-        .modal-title {
-            color: #ffd700;
-            font-size: 1.3rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .price-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        
-        .price-value { color: #ffd700; font-weight: bold; }
-        .price-detail { color: #aaa; font-size: 0.75rem; }
-        .price-data { color: #4caf50; font-weight: bold; }
-        
-        .points-text {
-            text-align: center;
-            color: white;
-            padding: 20px;
-        }
-        
-        .info-row {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        
-        .info-label { color: #ffd700; }
-        .info-value { color: white; }
-        
-        .close-btn {
-            background: linear-gradient(135deg, #ffd700, #ffb347);
-            border: none;
+        .success-msg, .error-msg {
+            background: rgba(76, 175, 80, 0.2);
+            border-radius: 10px;
             padding: 10px;
-            border-radius: 50px;
-            color: #1a1a2e;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
             margin-top: 15px;
+            font-size: 12px;
+            display: none;
         }
+        .success-msg { border: 1px solid #4caf50; color: #4caf50; }
+        .error-msg { border: 1px solid #ff4444; color: #ff8888; }
         
-        .saved-list {
-            max-height: 300px;
-            overflow-y: auto;
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+            margin-left: 5px;
+            animation: pulse 1.5s infinite;
         }
-        
-        .saved-item {
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
         }
-        
-        .saved-code { color: #ffd700; font-weight: bold; direction: ltr; }
-        .use-code { background: rgba(255, 215, 0, 0.2); border: none; padding: 5px 12px; border-radius: 20px; color: #ffd700; cursor: pointer; }
-        .empty { text-align: center; color: #888; padding: 20px; }
         
         @media (max-width: 480px) {
-            .card { padding: 20px; }
-            .social-icons a { width: 40px; height: 40px; font-size: 1rem; }
+            .login-submit { font-size: 1.2rem; height: 3.5rem; }
+            .login-input { font-size: 1.2rem; }
+            .info { font-size: 12px; }
+            .logo { max-width: 170px; }
+            .whatsapp-link { padding: 6px 14px; font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
-
-    <div class="card animate__animated animate__fadeInUp">
-        <!-- زر الوضع الليلي -->
-        <button class="theme-btn" id="themeBtn">
-            <i class="fas fa-moon"></i>
-        </button>
-        
-        <!-- الشعار -->
-        <div class="logo">
-            <i class="fas fa-wifi"></i>
-        </div>
-        <h1>أون لاين</h1>
-        <p class="sub">نت لاسلكي سريع | تغطية شاملة</p>
-        
-        <div class="status">
-            <span class="dot"></span>
-            <span>الشبكة متاحة</span>
-        </div>
-        
-        <!-- حقل الإدخال -->
-        <div class="input-group">
-            <input type="text" id="codeInput" placeholder="ادخل الرمز">
-            <button class="save-btn" id="saveBtn"><i class="fas fa-bookmark"></i></button>
-        </div>
-        
-        <!-- زر تسجيل الدخول -->
-        <button class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
-        
-        <!-- أزرار إضافية -->
-        <div class="action-row">
-            <button class="action-btn" id="pricesBtn"><i class="fas fa-tag"></i> الأسعار</button>
-            <button class="action-btn" id="pointsBtn"><i class="fas fa-store"></i> نقاط البيع</button>
-        </div>
-        
-        <!-- أيقونات التواصل -->
-        <div class="social">
-            <p><i class="fas fa-share-alt"></i> تابعنا على</p>
-            <div class="social-icons">
-                <a href="#" class="ig"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="tt"><i class="fab fa-tiktok"></i></a>
-                <a href="#" class="fb"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="wa"><i class="fab fa-whatsapp"></i></a>
-                <a href="#" class="tw"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="yt"><i class="fab fa-youtube"></i></a>
-            </div>
-        </div>
-        
-        <!-- جهات الاتصال -->
-        <div class="contact">
-            <p><i class="fas fa-headset"></i> للاستفسار والدعم</p>
-            <a href="tel:774629815"><i class="fas fa-phone-alt"></i> 774629815</a>
-            <a href="https://wa.me/966774629815?text=مرحباً" target="_blank" class="whatsapp">
-                <i class="fab fa-whatsapp"></i> واتساب
-            </a>
-            <div class="footer">
-                <i class="fas fa-code"></i> تطوير سالم
+    <div class="cont">
+        <div class="demo">
+            <div class="login">
+                <!-- زر الوضع الليلي -->
+                <div class="dark-mode-container">
+                    <label class="switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div style="text-align: center;">
+                    <img src="https://i.ibb.co/5wyBHwL/file-0000000085d4722fb688b595ae1d633c.png" class="logo" alt="أون لاين" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23143C5E\'/%3E%3Ctext x=\'100\' y=\'120\' text-anchor=\'middle\' fill=\'white\' font-size=\'40\' font-weight=\'bold\'%3Eأون لاين%3C/text%3E%3C/svg%3E'">
+                </div>
+                <p class="info" style="font-size: 2rem; font-weight: bold; color:#ffd700;">أون لاين</p>
+                <p class="info" style="font-size: 1.2rem;">نت لاسلكي سريع | تغطية شاملة</p>
+                <p class="info" style="font-size: 1rem;">
+                    <span class="status-dot"></span> الشبكة متاحة
+                </p>
+                
+                <div class="login-form">
+                    <div class="input-with-button">
+                        <div class="login-row">
+                            <input type="text" class="login-input" id="voucherCode" placeholder="ادخل الرمز" autocomplete="off">
+                        </div>
+                        <button class="saved-cards-btn" id="savedCardsBtn"><i class="fas fa-bookmark"></i></button>
+                    </div>
+                    
+                    <button class="login-submit" id="connectBtn"><i class="fas fa-sign-in-alt ml-2"></i> تسجيل الدخول</button>
+                    
+                    <div class="circle-buttons">
+                        <div class="circle" id="pricesBtn"><i class="fas fa-tag ml-1"></i> الأسعار</div>
+                        <div class="circle" id="pointsBtn"><i class="fas fa-store ml-1"></i> نقاط البيع</div>
+                    </div>
+                </div>
+                
+                <div class="contact">
+                    <div>
+                        <i class="fas fa-headset ml-1"></i> للاستفسار والدعم:
+                    </div>
+                    <a href="tel:774629815"><i class="fas fa-phone-alt ml-1"></i> 774629815</a>
+                    
+                    <!-- أيقونة واتساب فقط - مرتبطة بالرقم -->
+                    <a href="https://wa.me/966774629815?text=مرحباً، أحتاج مساعدة في خدمة أون لاين" target="_blank" class="whatsapp-link">
+                        <i class="fab fa-whatsapp"></i> واتساب
+                    </a>
+                </div>
+                
+                <div class="bottom-info">
+                    <i class="fas fa-code ml-1"></i> تطوير سالم
+                </div>
             </div>
         </div>
     </div>
     
     <!-- نافذة الأسعار -->
     <div id="pricesModal" class="modal">
-        <div class="modal-box">
-            <div class="modal-title"><i class="fas fa-tags"></i> باقات الإنترنت</div>
-            <div class="price-item"><div><div class="price-value">200 ريال</div><div class="price-detail">صلاحية يوم</div></div><div class="price-data">2 جيجابايت</div></div>
-            <div class="price-item"><div><div class="price-value">500 ريال</div><div class="price-detail">صلاحية 4 أيام</div></div><div class="price-data">5 جيجابايت</div></div>
-            <div class="price-item"><div><div class="price-value">1000 ريال</div><div class="price-detail">صلاحية أسبوع</div></div><div class="price-data">12 جيجابايت</div></div>
-            <div class="price-item"><div><div class="price-value">3000 ريال</div><div class="price-detail">صلاحية شهر</div></div><div class="price-data">40 جيجابايت</div></div>
-            <button class="close-btn" onclick="closeModal('pricesModal')">إغلاق</button>
+        <div class="modal-content animate__animated animate__zoomIn">
+            <div class="modal-title"><i class="fas fa-tags ml-1"></i> باقات الإنترنت</div>
+            <div class="pricing-list">
+                <div class="pricing-item"><div><div class="price-value">200 ريال</div><div class="price-detail">صلاحية يوم</div></div><div class="price-data">2 جيجابايت</div></div>
+                <div class="pricing-item"><div><div class="price-value">500 ريال</div><div class="price-detail">صلاحية 4 أيام</div></div><div class="price-data">5 جيجابايت</div></div>
+                <div class="pricing-item"><div><div class="price-value">1000 ريال</div><div class="price-detail">صلاحية أسبوع</div></div><div class="price-data">12 جيجابايت</div></div>
+                <div class="pricing-item"><div><div class="price-value">3000 ريال</div><div class="price-detail">صلاحية شهر</div></div><div class="price-data">40 جيجابايت</div></div>
+            </div>
         </div>
     </div>
     
     <!-- نافذة نقاط البيع -->
     <div id="pointsModal" class="modal">
-        <div class="modal-box">
-            <div class="modal-title"><i class="fas fa-store"></i> نقاط البيع</div>
-            <div class="points-text">
-                <i class="fas fa-map-marker-alt" style="font-size: 2rem; color: #ffd700; margin-bottom: 10px; display: block;"></i>
-                تتوفر كروت الشحن في جميع البقالة المجاورة للشبكة
-            </div>
-            <button class="close-btn" onclick="closeModal('pointsModal')">إغلاق</button>
+        <div class="modal-content animate__animated animate__zoomIn">
+            <div class="modal-title"><i class="fas fa-store ml-1"></i> نقاط البيع</div>
+            <div class="points-text-modal"><i class="fas fa-map-marker-alt ml-1"></i> تتوفر كروت الشحن في جميع البقالة المجاورة للشبكة</div>
         </div>
     </div>
     
     <!-- نافذة معلومات الاتصال -->
-    <div id="infoModal" class="modal">
-        <div class="modal-box">
-            <div class="modal-title"><i class="fas fa-tachometer-alt"></i> معلومات الاتصال</div>
-            <div class="info-row"><span class="info-label">عنوان الشبكة</span><span class="info-value">172.31.3.186</span></div>
-            <div class="info-row"><span class="info-label">التنزيل</span><span class="info-value">6 كيلوبايت</span></div>
-            <div class="info-row"><span class="info-label">الرفع</span><span class="info-value">8 كيلوبايت</span></div>
-            <div class="info-row"><span class="info-label">التحميل المتبقي</span><span class="info-value">15 جيجابايت</span></div>
-            <div class="info-row"><span class="info-label">الوقت المستهلك</span><span class="info-value">7 ثانية</span></div>
-            <div class="info-row"><span class="info-label">المدة المتبقية</span><span class="info-value">16 يوم 13 ساعة</span></div>
-            <button class="close-btn" onclick="closeModal('infoModal')">إغلاق</button>
+    <div id="infoModal" class="info-modal">
+        <div class="info-content animate__animated animate__zoomIn">
+            <h3><i class="fas fa-tachometer-alt ml-1"></i> معلومات الاتصال</h3>
+            <div class="info-details">
+                <p><span><i class="fas fa-network-wired ml-1"></i> عنوان الشبكة</span> <span>172.31.3.186</span></p>
+                <p><span><i class="fas fa-download ml-1"></i> التنزيل</span> <span>6 كيلوبايت</span></p>
+                <p><span><i class="fas fa-upload ml-1"></i> الرفع</span> <span>8 كيلوبايت</span></p>
+                <p><span><i class="fas fa-database ml-1"></i> التحميل المتبقي</span> <span>15 جيجابايت</span></p>
+                <p><span><i class="fas fa-clock ml-1"></i> الوقت المستهلك</span> <span>7 ثانية</span></p>
+                <p><span><i class="fas fa-hourglass-half ml-1"></i> المدة المتبقية</span> <span>16 يوم 13 ساعة 52 دقيقة</span></p>
+            </div>
+            <button class="close-info" onclick="closeInfoModal()"><i class="fas fa-check ml-1"></i> إغلاق</button>
         </div>
     </div>
     
     <!-- نافذة الكروت المحفوظة -->
-    <div id="savedModal" class="modal">
-        <div class="modal-box">
-            <div class="modal-title"><i class="fas fa-bookmark"></i> الكروت المحفوظة</div>
-            <div id="savedList" class="saved-list"></div>
-            <button class="close-btn" onclick="closeModal('savedModal')">إغلاق</button>
+    <div id="savedCardsModal" class="saved-cards-modal">
+        <div class="modal-content animate__animated animate__zoomIn">
+            <div class="modal-title"><i class="fas fa-bookmark ml-1"></i> الكروت المحفوظة</div>
+            <div id="savedCardsList" class="saved-cards-list"></div>
         </div>
     </div>
     
     <script>
+        const connectBtn = document.getElementById('connectBtn');
+        const voucherInput = document.getElementById('voucherCode');
+        
         // الوضع الليلي
-        const themeBtn = document.getElementById('themeBtn');
+        const darkModeToggle = document.getElementById('darkModeToggle');
         const body = document.body;
         
-        themeBtn.addEventListener('click', () => {
-            body.classList.toggle('dark');
-            const icon = themeBtn.querySelector('i');
-            if (body.classList.contains('dark')) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-                localStorage.setItem('theme', 'dark');
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+        
+        darkModeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'enabled');
             } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-                localStorage.setItem('theme', 'light');
+                body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'disabled');
             }
         });
         
-        if (localStorage.getItem('theme') === 'dark') {
-            body.classList.add('dark');
-            themeBtn.querySelector('i').classList.remove('fa-moon');
-            themeBtn.querySelector('i').classList.add('fa-sun');
-        }
-        
-        // تحويل الأرقام العربية
-        const codeInput = document.getElementById('codeInput');
-        codeInput.addEventListener('input', function() {
-            let val = this.value;
-            const map = { '٠':'0', '١':'1', '٢':'2', '٣':'3', '٤':'4', '٥':'5', '٦':'6', '٧':'7', '٨':'8', '٩':'9' };
-            val = val.replace(/[٠-٩]/g, m => map[m]);
-            val = val.replace(/[A-Z]/g, m => m.toLowerCase());
-            this.value = val;
+        // تحويل الأرقام العربية والحروف
+        voucherInput.addEventListener('input', function(e) {
+            let value = this.value;
+            const arabicToEnglish = {
+                '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
+                '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
+            };
+            value = value.replace(/[٠-٩]/g, m => arabicToEnglish[m]);
+            value = value.replace(/[A-Z]/g, m => m.toLowerCase());
+            this.value = value;
         });
         
         // الكروت المحفوظة
+        const STORAGE_KEY = 'saved_voucher_codes';
         let savedCodes = [];
+        
         try {
-            const stored = localStorage.getItem('savedCodes');
-            if (stored) savedCodes = JSON.parse(stored).slice(0, 2);
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                savedCodes = JSON.parse(stored);
+                if (savedCodes.length > 2) savedCodes = savedCodes.slice(0, 2);
+            }
         } catch(e) { savedCodes = []; }
         
         function saveCode(code) {
-            if (!code.trim()) return;
+            if (!code || code.trim() === '') return;
             savedCodes = [code, ...savedCodes.filter(c => c !== code)].slice(0, 2);
-            localStorage.setItem('savedCodes', JSON.stringify(savedCodes));
-            renderSavedList();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedCodes));
+            renderSavedCardsModal();
         }
         
-        function renderSavedList() {
-            const container = document.getElementById('savedList');
+        function renderSavedCardsModal() {
+            const container = document.getElementById('savedCardsList');
             if (!container) return;
             if (savedCodes.length === 0) {
-                container.innerHTML = '<div class="empty"><i class="fas fa-folder-open"></i> لا توجد كروت محفوظة</div>';
+                container.innerHTML = '<div class="no-cards-msg"><i class="fas fa-folder-open ml-1"></i> لا توجد كروت محفوظة</div>';
                 return;
             }
             container.innerHTML = savedCodes.map(code => `
-                <div class="saved-item">
-                    <span class="saved-code"><i class="fas fa-ticket-alt"></i> ${code}</span>
-                    <button class="use-code" data-code="${code}"><i class="fas fa-check"></i> استخدام</button>
+                <div class="saved-card-item">
+                    <span class="saved-card-code"><i class="fas fa-ticket-alt ml-1"></i> ${code}</span>
+                    <button class="use-card-btn" data-code="${code}"><i class="fas fa-check ml-1"></i> استخدام</button>
                 </div>
             `).join('');
-            document.querySelectorAll('.use-code').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    codeInput.value = btn.getAttribute('data-code');
-                    closeModal('savedModal');
+            document.querySelectorAll('.use-card-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    voucherInput.value = this.getAttribute('data-code');
+                    closeModal('savedCardsModal');
+                    voucherInput.focus();
                 });
             });
         }
         
-        document.getElementById('saveBtn').onclick = () => {
-            if (!codeInput.value.trim()) {
-                Swal.fire({ icon: 'error', title: 'خطأ', text: 'لا يوجد رمز للحفظ', background: '#1e293b', color: '#fff', confirmButtonColor: '#eab308' });
-                return;
-            }
-            saveCode(codeInput.value);
-            Swal.fire({ icon: 'success', title: 'تم الحفظ', text: 'تم حفظ الرمز بنجاح', timer: 1500, showConfirmButton: false, background: '#1e293b', color: '#fff' });
-            renderSavedList();
-            document.getElementById('savedModal').style.display = 'flex';
+        document.getElementById('savedCardsBtn').onclick = () => {
+            renderSavedCardsModal();
+            document.getElementById('savedCardsModal').style.display = 'flex';
         };
         
-        // فتح النوافذ
         document.getElementById('pricesBtn').onclick = () => document.getElementById('pricesModal').style.display = 'flex';
         document.getElementById('pointsBtn').onclick = () => document.getElementById('pointsModal').style.display = 'flex';
         
-        window.onclick = (e) => { if (e.target.classList.contains('modal')) e.target.style.display = 'none'; };
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
-        // تسجيل الدخول
-        document.getElementById('loginBtn').onclick = () => {
-            let code = codeInput.value.trim();
-            if (!code) {
-                Swal.fire({ icon: 'error', title: 'خطأ', text: 'يرجى إدخال الرمز', background: '#1e293b', color: '#fff', confirmButtonColor: '#eab308' });
-                return;
-            }
-            saveCode(code);
-            Swal.fire({ icon: 'success', title: '✅ تم بنجاح', text: 'تم توصيل الإنترنت', timer: 2000, showConfirmButton: false, background: '#1e293b', color: '#fff' });
-            codeInput.value = '';
-            setTimeout(() => { document.getElementById('infoModal').style.display = 'flex'; setTimeout(() => closeModal('infoModal'), 7000); }, 2000);
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) event.target.style.display = 'none';
+            if (event.target.classList.contains('info-modal')) event.target.style.display = 'none';
+            if (event.target.classList.contains('saved-cards-modal')) event.target.style.display = 'none';
         };
         
-        codeInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') document.getElementById('loginBtn').click(); });
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
         
-        renderSavedList();
+        function closeInfoModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
+        
+        connectBtn.addEventListener('click', function() {
+            let code = voucherInput.value.trim();
+            
+            if (code === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'خطأ',
+                    text: 'يرجى إدخال الرمز',
+                    confirmButtonText: 'حسناً',
+                    background: '#1e293b',
+                    color: '#fff',
+                    confirmButtonColor: '#eab308'
+                });
+                return;
+            }
+            
+            saveCode(code);
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'تم بنجاح',
+                text: 'تم توصيل الإنترنت بنجاح',
+                timer: 2000,
+                showConfirmButton: false,
+                background: '#1e293b',
+                color: '#fff'
+            });
+            
+            setTimeout(() => {
+                document.getElementById('infoModal').style.display = 'flex';
+                voucherInput.value = '';
+                setTimeout(() => closeInfoModal(), 8000);
+            }, 2000);
+        });
+        
+        voucherInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                connectBtn.click();
+            }
+        });
+        
+        // GSAP حركات
+        gsap.from(".login", { duration: 1, y: 50, opacity: 0, ease: "back.out(1.2)" });
+        gsap.from(".logo", { duration: 1, scale: 0, delay: 0.3, ease: "elastic.out(1, 0.5)" });
     </script>
 </body>
 </html>
