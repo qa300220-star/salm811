@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>أون لاين | إنترنت لاسلكي</title>
+    <title>أون لاين</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,55 +14,25 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <!-- Animate.css -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    
-    <!-- Font Awesome 6 -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
         * { font-family: 'Cairo', sans-serif; }
         
-        /* تأثيرات حركية */
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); }
         }
         .float-animation { animation: float 3s ease-in-out infinite; }
         
         @keyframes glow {
-            0%, 100% { box-shadow: 0 0 10px rgba(234, 179, 8, 0.3); }
-            50% { box-shadow: 0 0 35px rgba(234, 179, 8, 0.8); }
+            0%, 100% { box-shadow: 0 0 5px rgba(234, 179, 8, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(234, 179, 8, 0.7); }
         }
         .glow-effect { animation: glow 2s ease-in-out infinite; }
         
-        @keyframes slideInUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .slide-in-up { animation: slideInUp 0.6s ease-out; }
-        
-        @keyframes pulse-ring {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            100% { transform: scale(1.2); opacity: 0; }
-        }
-        .pulse-ring {
-            position: relative;
-        }
-        .pulse-ring::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            background: rgba(234, 179, 8, 0.5);
-            animation: pulse-ring 1.5s infinite;
-        }
-        
-        /* الوضع الليلي */
         body {
             background: linear-gradient(135deg, #0f172a, #1e1b4b);
             transition: background 0.5s ease;
@@ -84,7 +54,6 @@
         
         [x-cloak] { display: none !important; }
         
-        /* تخصيص النوافذ */
         .modal-overlay {
             animation: fadeIn 0.3s ease-out;
             cursor: pointer;
@@ -103,7 +72,6 @@
             to { transform: scale(1); opacity: 1; }
         }
         
-        /* تأثير hover على الأزرار */
         .btn-hover {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -112,7 +80,6 @@
             filter: brightness(1.05);
         }
         
-        /* شريط التمرير */
         ::-webkit-scrollbar {
             width: 5px;
         }
@@ -136,7 +103,6 @@
             <div class="absolute inset-0 opacity-10 pointer-events-none">
                 <div class="absolute top-0 right-0 w-40 h-40 bg-yellow-500 rounded-full blur-3xl animate-pulse"></div>
                 <div class="absolute bottom-0 left-0 w-40 h-40 bg-yellow-500 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-yellow-500 rounded-full blur-3xl opacity-30 animate-ping"></div>
             </div>
             
             <!-- زر الوضع الليلي -->
@@ -144,9 +110,9 @@
                 <i :class="darkMode ? 'fas fa-sun text-xl' : 'fas fa-moon text-xl'" class="transition-all"></i>
             </button>
             
-            <!-- الرأس الفخم -->
+            <!-- الرأس -->
             <div class="text-center mb-8 relative">
-                <div class="inline-block p-5 rounded-full bg-yellow-500/20 mb-4 float-animation pulse-ring relative">
+                <div class="inline-block p-5 rounded-full bg-yellow-500/20 mb-4 float-animation">
                     <i class="fas fa-wifi text-6xl text-yellow-500"></i>
                 </div>
                 <h1 class="text-5xl font-black text-yellow-500 tracking-wider drop-shadow-lg">أون لاين</h1>
@@ -161,8 +127,6 @@
                         <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                     </span>
                     <span class="text-gray-400 text-xs font-medium">الشبكة متاحة</span>
-                    <span class="text-gray-600 text-xs">•</span>
-                    <span class="text-gray-400 text-xs"><i class="fas fa-users ml-1"></i> 1,234 متصل</span>
                 </div>
             </div>
             
@@ -172,16 +136,14 @@
                     <input type="text" x-model="code" @input="convertToEnglish()" @keyup.enter="login()" placeholder="ادخل الرمز" 
                         class="w-full bg-white/10 border-b-2 border-yellow-600/50 focus:border-yellow-400 text-white text-center py-3.5 px-4 rounded-xl outline-none transition-all duration-300 focus:bg-white/20 focus:scale-[1.02] text-lg">
                     <i class="fas fa-key absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-base"></i>
-                    <i class="fas fa-magic absolute right-4 top-1/2 transform -translate-y-1/2 text-yellow-500/50 text-sm"></i>
                 </div>
                 <button @click="saveCurrentCode()" class="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl hover:scale-110 transition-all duration-300 btn-hover group">
                     <i class="fas fa-bookmark text-gray-900 text-xl group-hover:scale-110 transition"></i>
                 </button>
             </div>
             
-            <!-- زر تسجيل الدخول الفخم -->
-            <button @click="login()" class="w-full bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 hover:from-yellow-600 hover:via-yellow-700 hover:to-yellow-600 text-gray-900 font-bold py-4 rounded-2xl text-xl shadow-2xl transform hover:-translate-y-1 transition-all duration-300 mb-6 glow-effect btn-hover relative overflow-hidden group">
-                <span class="absolute inset-0 w-full h-full bg-white opacity-0 group-hover:opacity-20 transition"></span>
+            <!-- زر تسجيل الدخول -->
+            <button @click="login()" class="w-full bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 hover:from-yellow-600 hover:via-yellow-700 hover:to-yellow-600 text-gray-900 font-bold py-4 rounded-2xl text-xl shadow-2xl transform hover:-translate-y-1 transition-all duration-300 mb-6 glow-effect btn-hover">
                 <i class="fas fa-sign-in-alt ml-3"></i> تسجيل الدخول
             </button>
             
@@ -195,7 +157,7 @@
                 </button>
             </div>
             
-            <!-- جهات الاتصال الفخمة -->
+            <!-- جهات الاتصال -->
             <div class="text-center border-t border-white/10 pt-5">
                 <p class="text-gray-400 text-sm mb-2">
                     <i class="fas fa-headset ml-1 text-yellow-500"></i> للاستفسار والدعم الفني
@@ -203,19 +165,14 @@
                 <a href="tel:774629815" class="text-yellow-500 font-bold text-2xl hover:scale-105 inline-block transition btn-hover">
                     <i class="fas fa-phone-alt ml-2 text-base"></i> 774629815
                 </a>
-                <div class="flex justify-center gap-4 mt-4">
-                    <i class="fab fa-whatsapp text-gray-500 hover:text-green-500 transition cursor-pointer text-lg"></i>
-                    <i class="fab fa-telegram text-gray-500 hover:text-blue-500 transition cursor-pointer text-lg"></i>
-                    <i class="fab fa-instagram text-gray-500 hover:text-pink-500 transition cursor-pointer text-lg"></i>
-                </div>
                 <p class="text-gray-600 text-xs mt-4">
-                    <i class="fas fa-code ml-1"></i> تطوير سالم <i class="fas fa-crown ml-1 text-yellow-500 text-xs"></i>
+                    <i class="fas fa-code ml-1"></i> تطوير سالم
                 </p>
             </div>
         </div>
         
-        <!-- نافذة حفظ الكروت (بدون حذف يدوي، آخر 2 فقط) -->
-        <div x-show="showSaveModal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-5 modal-overlay" x-cloak @click="closeSaveModal()">
+        <!-- نافذة الكروت المحفوظة -->
+        <div x-show="showSaveModal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-5 modal-overlay" x-cloak @click="showSaveModal = false">
             <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 w-full max-w-sm border-2 border-yellow-500/50 shadow-2xl modal-content" @click.stop>
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-yellow-500 text-xl font-bold flex items-center gap-2">
@@ -227,11 +184,11 @@
                 <div x-show="savedCodes.length === 0" class="text-center py-8">
                     <i class="fas fa-folder-open text-yellow-500 text-5xl mb-3 opacity-50"></i>
                     <p class="text-gray-400">لا توجد كروت محفوظة</p>
-                    <p class="text-gray-500 text-sm mt-2">أضف رمزاً جديداً وسيحفظ تلقائياً</p>
+                    <p class="text-gray-500 text-sm mt-2">أضف رمزاً بالضغط على زر الحفظ 📋</p>
                 </div>
                 
                 <div x-show="savedCodes.length > 0" class="space-y-3 max-h-96 overflow-y-auto">
-                    <template x-for="(savedCode, idx) in savedCodes" :key="idx">
+                    <template x-for="savedCode in savedCodes" :key="savedCode">
                         <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition group">
                             <div class="flex items-center gap-3">
                                 <i class="fas fa-ticket-alt text-yellow-500 text-lg"></i>
@@ -247,53 +204,44 @@
                 <div class="mt-4 pt-3 border-t border-white/10 text-center">
                     <p class="text-gray-500 text-xs flex items-center justify-center gap-2">
                         <i class="fas fa-info-circle"></i>
-                        يتم الاحتفاظ بآخر <span class="text-yellow-500">2</span> رموز فقط
+                        يتم الاحتفاظ بآخر <span class="text-yellow-500 font-bold">2</span> رموز فقط
                     </p>
                 </div>
             </div>
         </div>
         
         <!-- نافذة الأسعار -->
-        <div x-show="showPrices" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-5 modal-overlay" x-cloak @click="closePricesModal()">
+        <div x-show="showPrices" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-5 modal-overlay" x-cloak @click="showPrices = false">
             <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 w-full max-w-sm border-2 border-yellow-500/50 shadow-2xl modal-content" @click.stop>
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-yellow-500 text-xl font-bold flex items-center gap-2">
-                        <i class="fas fa-tags"></i> باقات الإنترنت
-                    </h2>
-                </div>
-                <div class="space-y-3 max-h-96 overflow-y-auto">
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition"><div><div class="text-yellow-500 font-bold text-lg">200 ريال</div><div class="text-gray-400 text-sm">صلاحية يوم</div></div><div class="text-green-500 font-bold">2 جيجابايت</div></div>
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition"><div><div class="text-yellow-500 font-bold text-lg">500 ريال</div><div class="text-gray-400 text-sm">صلاحية 4 أيام</div></div><div class="text-green-500 font-bold">5 جيجابايت</div></div>
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition"><div><div class="text-yellow-500 font-bold text-lg">1000 ريال</div><div class="text-gray-400 text-sm">صلاحية أسبوع</div></div><div class="text-green-500 font-bold">12 جيجابايت</div></div>
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition"><div><div class="text-yellow-500 font-bold text-lg">3000 ريال</div><div class="text-gray-400 text-sm">صلاحية شهر</div></div><div class="text-green-500 font-bold">40 جيجابايت</div></div>
+                <h2 class="text-yellow-500 text-xl font-bold flex items-center gap-2 justify-center mb-4">
+                    <i class="fas fa-tags"></i> باقات الإنترنت
+                </h2>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl"><div><div class="text-yellow-500 font-bold text-lg">200 ريال</div><div class="text-gray-400 text-sm">صلاحية يوم</div></div><div class="text-green-500 font-bold">2 جيجابايت</div></div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl"><div><div class="text-yellow-500 font-bold text-lg">500 ريال</div><div class="text-gray-400 text-sm">صلاحية 4 أيام</div></div><div class="text-green-500 font-bold">5 جيجابايت</div></div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl"><div><div class="text-yellow-500 font-bold text-lg">1000 ريال</div><div class="text-gray-400 text-sm">صلاحية أسبوع</div></div><div class="text-green-500 font-bold">12 جيجابايت</div></div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl"><div><div class="text-yellow-500 font-bold text-lg">3000 ريال</div><div class="text-gray-400 text-sm">صلاحية شهر</div></div><div class="text-green-500 font-bold">40 جيجابايت</div></div>
                 </div>
             </div>
         </div>
         
         <!-- نافذة نقاط البيع -->
-        <div x-show="showPoints" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-5 modal-overlay" x-cloak @click="closePointsModal()">
+        <div x-show="showPoints" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-5 modal-overlay" x-cloak @click="showPoints = false">
             <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 w-full max-w-sm border-2 border-yellow-500/50 shadow-2xl modal-content" @click.stop>
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-yellow-500 text-xl font-bold flex items-center gap-2">
-                        <i class="fas fa-store"></i> نقاط البيع
-                    </h2>
-                </div>
+                <h2 class="text-yellow-500 text-xl font-bold flex items-center gap-2 justify-center mb-4">
+                    <i class="fas fa-store"></i> نقاط البيع
+                </h2>
                 <div class="text-center py-8">
                     <i class="fas fa-map-marker-alt text-yellow-500 text-5xl mb-4 animate-pulse"></i>
                     <p class="text-white text-lg font-medium">تتوفر كروت الشحن</p>
                     <p class="text-gray-300 mt-3">في جميع البقالة المجاورة للشبكة</p>
-                    <div class="mt-6 flex justify-center gap-2">
-                        <span class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
-                        <span class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse delay-200"></span>
-                        <span class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse delay-500"></span>
-                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- نافذة معلومات الاتصال الفخمة -->
-        <div x-show="showInfo" class="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 p-5 modal-overlay" x-cloak @click="closeInfoModal()">
-            <div class="bg-gradient-to-br from-gray-900 to-slate-900 rounded-2xl p-6 w-full max-w-md border-2 border-yellow-500/50 shadow-2xl modal-content slide-in-up" @click.stop>
+        <!-- نافذة معلومات الاتصال -->
+        <div x-show="showInfo" class="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 p-5 modal-overlay" x-cloak @click="showInfo = false">
+            <div class="bg-gradient-to-br from-gray-900 to-slate-900 rounded-2xl p-6 w-full max-w-md border-2 border-yellow-500/50 shadow-2xl modal-content" @click.stop>
                 <div class="text-center mb-5">
                     <div class="inline-block p-3 rounded-full bg-yellow-500/20 mb-3">
                         <i class="fas fa-tachometer-alt text-yellow-500 text-4xl"></i>
@@ -304,37 +252,29 @@
                 </div>
                 
                 <div class="space-y-3">
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition border-r-2 border-yellow-500/50">
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border-r-2 border-yellow-500/50">
                         <span class="text-gray-300"><i class="fas fa-network-wired ml-2 text-yellow-500"></i> عنوان الشبكة</span>
                         <span class="text-white font-mono font-bold">172.31.3.186</span>
                     </div>
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl">
                         <span class="text-gray-300"><i class="fas fa-download ml-2 text-yellow-500"></i> سرعة التنزيل</span>
                         <span class="text-green-400 font-bold">6 كيلوبايت/ث</span>
                     </div>
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl">
                         <span class="text-gray-300"><i class="fas fa-upload ml-2 text-yellow-500"></i> سرعة الرفع</span>
                         <span class="text-green-400 font-bold">8 كيلوبايت/ث</span>
                     </div>
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl">
                         <span class="text-gray-300"><i class="fas fa-database ml-2 text-yellow-500"></i> الباقة المتبقية</span>
                         <span class="text-blue-400 font-bold">15 جيجابايت</span>
                     </div>
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl">
                         <span class="text-gray-300"><i class="fas fa-clock ml-2 text-yellow-500"></i> مدة الاستخدام</span>
                         <span class="text-orange-400 font-bold">7 ثواني</span>
                     </div>
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl">
                         <span class="text-gray-300"><i class="fas fa-hourglass-half ml-2 text-yellow-500"></i> المدة المتبقية</span>
                         <span class="text-purple-400 font-bold">16 يوم 13 ساعة</span>
-                    </div>
-                </div>
-                
-                <div class="mt-5 text-center">
-                    <div class="inline-flex gap-3 bg-white/5 px-4 py-2 rounded-full">
-                        <span class="text-xs text-gray-400"><i class="fas fa-shield-alt text-yellow-500 ml-1"></i> آمن</span>
-                        <span class="text-xs text-gray-400"><i class="fas fa-bolt text-yellow-500 ml-1"></i> فائق السرعة</span>
-                        <span class="text-xs text-gray-400"><i class="fas fa-headset text-yellow-500 ml-1"></i> دعم 24/7</span>
                     </div>
                 </div>
             </div>
@@ -357,7 +297,6 @@
                     const stored = localStorage.getItem('savedCodes');
                     if (stored) {
                         this.savedCodes = JSON.parse(stored);
-                        // الاحتفاظ بآخر 2 فقط
                         if (this.savedCodes.length > 2) this.savedCodes = this.savedCodes.slice(0, 2);
                     }
                     
@@ -370,12 +309,16 @@
                 },
                 
                 convertToEnglish() {
-                    const arabicNumbers = /[\u0660-\u0669]/g;
-                    const englishNumbers = {
+                    let value = this.code;
+                    // تحويل الأرقام العربية إلى إنجليزية
+                    const arabicNumbers = {
                         '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
                         '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
                     };
-                    this.code = this.code.replace(arabicNumbers, (match) => englishNumbers[match]);
+                    value = value.replace(/[٠-٩]/g, m => arabicNumbers[m]);
+                    // تحويل الحروف الكبيرة إلى صغيرة
+                    value = value.replace(/[A-Z]/g, m => m.toLowerCase());
+                    this.code = value;
                 },
                 
                 saveCurrentCode() {
@@ -396,7 +339,7 @@
                     
                     // إزالة الرمز إذا كان موجود
                     this.savedCodes = this.savedCodes.filter(c => c !== this.code);
-                    // إضافة الرمز في البداية
+                    // إضافة الرمز الجديد في البداية
                     this.savedCodes.unshift(this.code);
                     // الاحتفاظ بآخر 2 فقط
                     if (this.savedCodes.length > 2) this.savedCodes = this.savedCodes.slice(0, 2);
@@ -413,12 +356,12 @@
                         color: '#fff'
                     });
                     
-                    this.openSaveModal();
+                    this.showSaveModal = true;
                 },
                 
                 useSavedCode(savedCode) {
                     this.code = savedCode;
-                    this.closeSaveModal();
+                    this.showSaveModal = false;
                     Swal.fire({
                         icon: 'success',
                         title: 'تم',
@@ -430,32 +373,12 @@
                     });
                 },
                 
-                openSaveModal() {
-                    this.showSaveModal = true;
-                },
-                
-                closeSaveModal() {
-                    this.showSaveModal = false;
-                },
-                
                 openPricesModal() {
                     this.showPrices = true;
                 },
                 
-                closePricesModal() {
-                    this.showPrices = false;
-                },
-                
                 openPointsModal() {
                     this.showPoints = true;
-                },
-                
-                closePointsModal() {
-                    this.showPoints = false;
-                },
-                
-                closeInfoModal() {
-                    this.showInfo = false;
                 },
                 
                 login() {
