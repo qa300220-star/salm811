@@ -80,6 +80,7 @@
             border-radius: 18px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             transition: transform 0.3s ease;
+            cursor: pointer;
         }
         .logo:hover {
             transform: scale(1.02);
@@ -884,12 +885,12 @@
             return div.innerHTML;
         }
         
-        // فتح نافذة الإدارة (اختصار: الضغط على 5 مرات على الشعار)
+        // فتح نافذة الإدارة (اختصار: الضغط على 3 مرات على الشعار)
         let logoClickCount = 0;
         document.querySelector('.logo').addEventListener('click', () => {
             logoClickCount++;
             setTimeout(() => { logoClickCount = 0; }, 1000);
-            if (logoClickCount >= 5) {
+            if (logoClickCount >= 3) {
                 openAdminPanel();
                 logoClickCount = 0;
             }
