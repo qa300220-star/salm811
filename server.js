@@ -8,16 +8,20 @@ const io = socketIo(server);
 
 app.use(express.static('public'));
 
-let messages = [];
+let adminMessages = [];
 
 io.on('connection', (socket) => {
-    socket.emit('old-messages', messages);
+    console.log('✅ مستخدم متصل');
 
-    socket.on('send-message', (msg) => {
-        messages.push(msg);
-        io.emit('new-message', msg);
+    socket.on('send-admin-message', (msg) => {
+        adminMessages.push(msg);
+        io.emit('admin-messages-update', adminMessages);
+    });
+
+    socket.on('get-admin-messages', () => {
+        socket.emit('admin-messages-update', adminMessages);
     });
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Server on port ${PORT}`));
+server.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
