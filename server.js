@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
     // إرسال رسالة جديدة
     socket.on('send-admin-message', (msg) => {
         adminMessages.push(msg);
-        saveMessages();  // حفظ في الملف
+        saveMessages();
         io.emit('admin-messages-update', adminMessages);
     });
 
@@ -46,8 +46,17 @@ io.on('connection', (socket) => {
         socket.emit('admin-messages-update', adminMessages);
     });
     
-    // 🔴 تم إزالة حدث delete-admin-message نهائياً 🔴
-    // لا يوجد حذف للرسائل أبداً
+    // ✅ إضافة حدث الحذف (هذا هو المطلوب)
+    socket.on('delete-admin-message', (messageId) => {
+        console.log('🗑️ جاري حذف الرسالة:', messageId);
+        const index = adminMessages.findIndex(m => m.id == messageId);
+        if (index !== -1) {
+            adminMessages.splice(index, 1);  // حذف نهائي
+            saveMessages();                   // حفظ التغيير
+            io.emit('admin-messages-update', adminMessages);  // تحديث الجميع
+            console.log('✅ تم حذف الرسالة نهائياً');
+        }
+    });
 });
 
 const PORT = process.env.PORT || 3000;
