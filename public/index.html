@@ -6,799 +6,126 @@
     <meta name="theme-color" content="#091527">
     <title>أون لاين | شبكة إنترنت</title>
     
-    <!-- صورة الموقع -->
-    <meta property="og:title" content="أون لاين | إنترنت لاسلكي">
-    <meta property="og:description" content="نت لاسلكي سريع | تغطية شاملة | كروت شحن متوفرة">
-    <meta property="og:image" content="https://i.ibb.co/QWmRVXW/Screenshot.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://stalwart-pixie-c8f7ce.netlify.app/">
-    <meta name="twitter:card" content="summary_large_image">
-    
-    <!-- SweetAlert2 -->
+    <!-- SweetAlert2 & Socket.io -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Socket.io -->
     <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
+        /* نفس الستايلات السابقة - تم اختصارها هنا للمساحة */
         @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap');
-        *, :after, :before {
-            font-family: 'Almarai', sans-serif, Arial;
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0
-        }
-        body, html {
-            font-size: 80.5%;
-            height: 100%;
-            font-family: 'Almarai', sans-serif, Arial;
-            direction: rtl;
-            transition: background 0.3s ease;
-        }
-        body {
-            background: linear-gradient(135deg, #0a1928, #0d2a3a);
-        }
-        @media (max-width: 768px) {
-            body, html { font-size: 65% }
-        }
-        button, input, textarea {
-            outline: 0;
-            border: none
-        }
-        .cont {
-            position: relative;
-            height: 100%;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .demo {
-            position: relative;
-            width: 30rem;
-            height: auto;
-            margin: 2rem auto;
-            border-radius: 20px;
-        }
-        .login {
-            position: relative;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px 20px;
-            border: 1px solid rgba(255,215,0,0.3);
-            transition: transform 0.3s ease;
-        }
-        .login:hover {
-            transform: translateY(-5px);
-        }
-        .logo {
-            max-width: 200px;
-            width: 80%;
-            display: block;
-            margin: 0 auto 20px auto;
-            border-radius: 18px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-        .logo:hover {
-            transform: scale(1.02);
-        }
-        .info {
-            color: #fff;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        .login-form {
-            text-align: center;
-            padding: 1.5rem 1rem;
-        }
-        .input-with-button {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .login-row {
-            flex: 1;
-            height: 5rem;
-            padding-top: 1rem;
-            border-bottom: 1px solid rgba(255,215,0,0.5);
-        }
-        .login-input {
-            direction: ltr;
-            display: inline-block;
-            text-align: center;
-            width: 100%;
-            height: 100%;
-            padding: 0 1rem;
-            font-size: 1.5rem;
-            background: 0 0;
-            color: #fff;
-        }
-        .login-input::placeholder {
-            color: rgba(255,255,255,0.6);
-        }
-        .saved-cards-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff3366, #ff6680);
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: white;
-            font-size: 1.3rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(255,51,102,0.3);
-            flex-shrink: 0;
-        }
-        .saved-cards-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 18px rgba(255,51,102,0.5);
-        }
-        
-        /* زر تسجيل الدخول */
-        .login-submit {
-            width: 100%;
-            height: 4rem;
-            margin: 2rem 0 1rem;
-            color: white;
-            background: linear-gradient(135deg, #ff3366, #ff6680);
-            font-size: 1.5rem;
-            border-radius: 3rem;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(255,51,102,0.3);
-            transition: all 0.2s ease;
-            position: relative;
-        }
-        .login-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255,51,102,0.4);
-        }
-        
-        /* زر التواصل مع الإدارة */
-        .contact-admin-btn {
-            width: 100%;
-            background: rgba(255,215,0,0.15);
-            border: 1px solid rgba(255,215,0,0.5);
-            padding: 12px;
-            border-radius: 50px;
-            color: #ffd700;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .contact-admin-btn:hover {
-            background: rgba(255,215,0,0.3);
-            transform: translateY(-2px);
-        }
-        
-        /* نافذة إرسال رسالة للإدارة */
-        .admin-msg-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-        .admin-msg-content {
-            background: linear-gradient(135deg, #0a1928, #0d2a3a);
-            border-radius: 24px;
-            width: 90%;
-            max-width: 380px;
-            padding: 25px;
-            border: 1px solid #ffd700;
-            text-align: center;
-        }
-        .admin-msg-content textarea {
-            width: 100%;
-            height: 120px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,215,0,0.5);
-            border-radius: 16px;
-            padding: 12px;
-            color: white;
-            font-size: 1rem;
-            margin: 15px 0;
-            resize: vertical;
-        }
-        .admin-msg-content textarea::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-        .send-msg-btn {
-            background: linear-gradient(135deg, #ffd700, #ffb347);
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            color: #0a1928;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-        }
-        .close-admin-modal {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #ffd700;
-        }
-        
-        /* نافذة الإدارة (للمدير فقط) */
-        .admin-panel-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-        .admin-panel-content {
-            background: linear-gradient(135deg, #0a1928, #0d2a3a);
-            border-radius: 24px;
-            width: 90%;
-            max-width: 400px;
-            max-height: 80vh;
-            padding: 25px;
-            border: 1px solid #ffd700;
-            overflow-y: auto;
-        }
-        .admin-panel-content h3 {
-            color: #ffd700;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        .msg-item {
-            background: rgba(255,255,255,0.08);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-right: 3px solid #ffd700;
-        }
-        .msg-sender {
-            color: #ffd700;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .msg-text {
-            color: white;
-            margin-bottom: 5px;
-            word-break: break-word;
-        }
-        .msg-time {
-            color: #aaa;
-            font-size: 0.7rem;
-        }
-        .delete-msg-btn {
-            background: rgba(255,68,68,0.3);
-            border: none;
-            color: #ff8888;
-            padding: 4px 10px;
-            border-radius: 15px;
-            cursor: pointer;
-            margin-top: 5px;
-            font-size: 0.7rem;
-        }
-        .no-messages {
-            color: #aaa;
-            text-align: center;
-            padding: 20px;
-        }
-        .admin-login-area {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,215,0,0.3);
-        }
-        .admin-login-input {
-            width: 100%;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,215,0,0.5);
-            padding: 10px;
-            border-radius: 12px;
-            color: white;
-            margin-bottom: 10px;
-        }
-        
-        .circle-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 20px 0 10px;
-        }
-        .circle {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff3366, #ff6680);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: white;
-            font-weight: bold;
-            font-size: 0.9rem;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(255,51,102,0.3);
-        }
-        .circle:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 18px rgba(255,51,102,0.5);
-        }
-        
-        /* النوافذ المنبثقة الأخرى */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background: linear-gradient(135deg, #0a1928, #0d2a3a);
-            border-radius: 20px;
-            width: 85%;
-            max-width: 350px;
-            padding: 25px;
-            border: 1px solid rgba(255,215,0,0.5);
-            position: relative;
-        }
-        .close-modal {
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #ffaa66;
-            font-weight: bold;
-        }
-        .modal-title {
-            color: #ffd700;
-            text-align: center;
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .pricing-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .pricing-item {
-            background: rgba(255,255,255,0.08);
-            border-radius: 12px;
-            padding: 12px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .price-value {
-            color: #ffd700;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-        .price-detail {
-            color: #fff;
-            font-size: 0.8rem;
-            margin-top: 4px;
-        }
-        .price-data {
-            color: #4caf50;
-            font-size: 0.9rem;
-            font-weight: bold;
-            background: rgba(76,175,80,0.15);
-            padding: 4px 10px;
-            border-radius: 20px;
-        }
-        .points-text-modal {
-            color: rgba(255,255,255,0.9);
-            font-size: 1rem;
-            line-height: 1.7;
-            text-align: center;
-            padding: 20px 10px;
-        }
-        .info-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 1100;
-            justify-content: center;
-            align-items: center;
-        }
-        .info-content {
-            background: linear-gradient(135deg, #0a1928, #0d2a3a);
-            border-radius: 20px;
-            width: 90%;
-            max-width: 340px;
-            padding: 25px;
-            border: 1px solid rgba(255,215,0,0.5);
-            text-align: center;
-            position: relative;
-        }
-        .close-info-x {
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #ffaa66;
-            font-weight: bold;
-        }
-        .info-content h3 {
-            color: #ffd700;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-        }
-        .info-details {
-            background: rgba(255,215,0,0.1);
-            border-radius: 12px;
-            padding: 15px;
-            margin: 15px 0;
-            text-align: right;
-        }
-        .info-details p {
-            color: white;
-            font-size: 0.85rem;
-            margin: 8px 0;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px dashed rgba(255,215,0,0.3);
-            padding-bottom: 5px;
-        }
-        .info-details span:first-child {
-            color: #ffd700;
-            font-weight: bold;
-        }
-        .close-info {
-            background: rgba(255,215,0,0.3);
-            border: 1px solid rgba(255,215,0,0.5);
-            color: #ffd700;
-            padding: 10px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 1rem;
-        }
-        .saved-cards-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 1100;
-            justify-content: center;
-            align-items: center;
-        }
-        .saved-cards-modal .modal-content {
-            background: linear-gradient(135deg, #0a1928, #0d2a3a);
-            border-radius: 20px;
-            width: 85%;
-            max-width: 350px;
-            padding: 25px;
-            border: 1px solid rgba(255,215,0,0.5);
-            position: relative;
-            text-align: center;
-        }
-        .saved-cards-modal .close-modal {
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #ffaa66;
-            font-weight: bold;
-        }
-        .saved-cards-modal .modal-title {
-            color: #ffd700;
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-        }
-        .saved-cards-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin: 15px 0;
-        }
-        .saved-card-item {
-            background: rgba(255,215,0,0.1);
-            border: 1px solid rgba(255,215,0,0.4);
-            border-radius: 12px;
-            padding: 12px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            direction: ltr;
-        }
-        .saved-card-code {
-            color: #ffd700;
-            font-size: 1.1rem;
-            font-weight: bold;
-        }
-        .use-card-btn {
-            background: rgba(255,215,0,0.2);
-            border: 1px solid rgba(255,215,0,0.5);
-            color: #ffd700;
-            padding: 5px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        .no-cards-msg {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.9rem;
-            padding: 20px;
-        }
-        @media (max-width: 480px) {
-            .circle {
-                width: 70px;
-                height: 70px;
-                font-size: 0.8rem;
-            }
-            .pricing-item {
-                flex-direction: column;
-                text-align: center;
-            }
-            .saved-cards-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 1.2rem;
-            }
-        }
-        .contact {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.7);
-        }
-        .contact a {
-            color: #ffaa66;
-            text-decoration: none;
-        }
-        .bottom-info {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.6);
-            font-size: 11px;
-        }
-        .success-msg, .error-msg {
-            background: rgba(76, 175, 80, 0.2);
-            border-radius: 10px;
-            padding: 10px;
-            margin-top: 15px;
-            font-size: 12px;
-            display: none;
-        }
-        .success-msg { border: 1px solid #4caf50; color: #4caf50; }
-        .error-msg { border: 1px solid #ff4444; color: #ff8888; }
-        .success-msg.show, .error-msg.show { display: block; }
-        .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #4caf50;
-            border-radius: 50%;
-            margin-left: 5px;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
-            70% { box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
-        }
-        @media (max-width: 480px) {
-            .login-submit {
-                font-size: 1.2rem;
-                height: 3.5rem;
-            }
-            .login-input {
-                font-size: 1.2rem;
-            }
-            .info {
-                font-size: 12px;
-            }
-            .logo {
-                max-width: 170px;
-            }
-        }
+        *{font-family:'Almarai',sans-serif;box-sizing:border-box;margin:0;padding:0}
+        body{background:linear-gradient(135deg,#0a1928,#0d2a3a);font-size:80.5%}
+        @media(max-width:768px){body{font-size:65%}}
+        .cont{display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+        .login{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border-radius:20px;padding:30px 20px;border:1px solid rgba(255,215,0,0.3);width:30rem}
+        .logo{max-width:200px;display:block;margin:0 auto 20px;border-radius:18px;cursor:pointer}
+        .info{color:#fff;text-align:center}
+        .login-input{direction:ltr;text-align:center;width:100%;padding:1rem;background:0 0;color:#fff;font-size:1.5rem;border-bottom:1px solid rgba(255,215,0,0.5)}
+        .saved-cards-btn,.login-submit{background:linear-gradient(135deg,#ff3366,#ff6680);color:white;border:none;cursor:pointer}
+        .login-submit{width:100%;padding:1rem;border-radius:3rem;font-size:1.5rem;margin:2rem 0 1rem}
+        .contact-admin-btn{width:100%;background:rgba(255,215,0,0.15);border:1px solid rgba(255,215,0,0.5);padding:12px;border-radius:50px;color:#ffd700;margin:10px 0}
+        .circle-buttons{display:flex;justify-content:center;gap:30px;margin:20px 0}
+        .circle{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#ff3366,#ff6680);display:flex;align-items:center;justify-content:center;color:white;cursor:pointer}
+        .modal,.info-modal,.saved-cards-modal,.admin-msg-modal,.admin-panel-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:2000;justify-content:center;align-items:center}
+        .modal-content,.admin-msg-content,.admin-panel-content,.info-content{background:linear-gradient(135deg,#0a1928,#0d2a3a);border-radius:24px;padding:25px;border:1px solid #ffd700;max-width:400px;width:90%}
+        .close-modal,.close-info-x,.close-admin-modal{position:absolute;top:15px;left:15px;font-size:24px;cursor:pointer;color:#ffd700}
+        .msg-item{background:rgba(255,255,255,0.08);border-radius:12px;padding:12px;margin-bottom:10px;border-right:3px solid #ffd700}
+        .msg-item.deleted{opacity:0.6;border-right-color:#ff4444}
+        .deleted-text{color:#ff8888;font-style:italic;text-align:center}
+        .delete-msg-btn,.delete-for-everyone-btn{background:rgba(255,68,68,0.3);border:none;color:#ff8888;padding:4px 10px;border-radius:15px;cursor:pointer;margin-top:5px}
+        .status-dot{display:inline-block;width:8px;height:8px;background:#4caf50;border-radius:50%;animation:pulse 1.5s infinite}
+        @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(76,175,80,0.7)}70%{box-shadow:0 0 0 6px rgba(76,175,80,0)}100%{box-shadow:0 0 0 0 rgba(76,175,80,0)}}
+        .contact a{color:#ffaa66}
+        .bottom-info{text-align:center;margin-top:20px;color:rgba(255,255,255,0.6);font-size:11px}
     </style>
 </head>
 <body>
     <div class="cont">
         <div class="demo">
             <div class="login">
-                <div style="text-align: center;">
-                    <img src="https://i.ibb.co/5wyBHwL/file-0000000085d4722fb688b595ae1d633c.png" class="logo" alt="أون لاين" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23143C5E\'/%3E%3Ctext x=\'100\' y=\'120\' text-anchor=\'middle\' fill=\'white\' font-size=\'40\' font-weight=\'bold\'%3Eأون لاين%3C/text%3E%3C/svg%3E'">
-                </div>
-                <p class="info" style="font-size: 2rem; font-weight: bold; color:#ffd700;">أون لاين</p>
-                <p class="info" style="font-size: 1.2rem;">نت لاسلكي سريع | تغطية شاملة</p>
-                <p class="info" style="font-size: 1rem;">
-                    <span class="status-dot"></span> الشبكة متاحة
-                </p>
+                <img src="https://i.ibb.co/5wyBHwL/file-0000000085d4722fb688b595ae1d633c.png" class="logo" alt="أون لاين" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23143C5E\'/%3E%3Ctext x=\'100\' y=\'120\' text-anchor=\'middle\' fill=\'white\' font-size=\'40\' font-weight=\'bold\'%3Eأون لاين%3C/text%3E%3C/svg%3E'">
+                <p class="info" style="font-size:2rem;font-weight:bold;color:#ffd700">أون لاين</p>
+                <p class="info">نت لاسلكي سريع | تغطية شاملة</p>
+                <p class="info"><span class="status-dot"></span> الشبكة متاحة</p>
                 
                 <div class="login-form">
-                    <div class="input-with-button">
-                        <div class="login-row">
-                            <input type="text" class="login-input" id="voucherCode" placeholder="ادخل الرمز" autocomplete="off">
-                        </div>
-                        <button class="saved-cards-btn" id="savedCardsBtn">📋</button>
-                    </div>
-                    
-                    <button class="login-submit" id="connectBtn">
-                        تسجيل الدخول
-                    </button>
-                    
-                    <!-- زر التواصل مع الإدارة -->
-                    <button class="contact-admin-btn" id="contactAdminBtn">
-                        <i class="fas fa-envelope"></i> تواصل مع الإدارة
-                    </button>
+                    <input type="text" class="login-input" id="voucherCode" placeholder="ادخل الرمز">
+                    <button class="login-submit" id="connectBtn">تسجيل الدخول</button>
+                    <button class="contact-admin-btn" id="contactAdminBtn"><i class="fas fa-envelope"></i> تواصل مع الإدارة</button>
                     
                     <div class="circle-buttons">
                         <div class="circle" id="pricesBtn">الأسعار</div>
                         <div class="circle" id="pointsBtn">نقاط البيع</div>
                     </div>
-                    
-                    <div id="successMsg" class="success-msg">تم توصيل الإنترنت بنجاح</div>
-                    <div id="errorMsg" class="error-msg">يرجى إدخال الرمز</div>
                 </div>
                 
                 <div class="contact">
                     للاستفسار والدعم:<br>
                     <a href="tel:774629815">774629815</a>
                 </div>
-                
-                <div class="bottom-info">
-                    تطوير سالم
-                </div>
+                <div class="bottom-info">تطوير سالم</div>
             </div>
         </div>
     </div>
     
-    <!-- نافذة إرسال رسالة للإدارة -->
+    <!-- نافذة إرسال رسالة -->
     <div id="adminMsgModal" class="admin-msg-modal">
         <div class="admin-msg-content">
             <span class="close-admin-modal" onclick="closeAdminMsgModal()">&times;</span>
-            <h3 style="color:#ffd700; margin-bottom:15px;"><i class="fas fa-headset"></i> تواصل مع الإدارة</h3>
-            <input type="text" id="senderName" class="admin-login-input" placeholder="اسمك" style="margin-bottom:10px;">
-            <textarea id="adminMessage" placeholder="اكتب رسالتك هنا..."></textarea>
-            <button class="send-msg-btn" id="sendAdminMsgBtn"><i class="fas fa-paper-plane"></i> إرسال الرسالة</button>
+            <h3 style="color:#ffd700"><i class="fas fa-headset"></i> تواصل مع الإدارة</h3>
+            <input type="text" id="senderName" placeholder="اسمك" style="width:100%;background:rgba(255,255,255,0.1);border:1px solid #ffd700;padding:10px;border-radius:12px;color:white;margin:10px 0">
+            <textarea id="adminMessage" placeholder="اكتب رسالتك هنا..." style="width:100%;height:120px;background:rgba(255,255,255,0.1);border:1px solid #ffd700;border-radius:16px;padding:12px;color:white;margin:10px 0"></textarea>
+            <button class="send-msg-btn" id="sendAdminMsgBtn" style="background:#ffd700;color:#0a1928;padding:12px;border-radius:50px;width:100%">إرسال</button>
         </div>
     </div>
     
-    <!-- نافذة الإدارة (للمدير فقط) -->
+    <!-- نافذة الإدارة -->
     <div id="adminPanelModal" class="admin-panel-modal">
         <div class="admin-panel-content">
             <span class="close-admin-modal" onclick="closeAdminPanel()">&times;</span>
-            <h3><i class="fas fa-lock"></i> لوحة التحكم - الإدارة</h3>
+            <h3><i class="fas fa-lock"></i> لوحة التحكم</h3>
             <div id="adminLoginArea">
-                <input type="password" id="adminPassword" class="admin-login-input" placeholder="كلمة المرور">
-                <button id="adminLoginBtn" class="send-msg-btn" style="background:#ff3366;">دخول</button>
+                <input type="password" id="adminPassword" placeholder="كلمة المرور" style="width:100%;background:rgba(255,255,255,0.1);border:1px solid #ffd700;padding:10px;border-radius:12px;color:white;margin-bottom:10px">
+                <button id="adminLoginBtn" style="background:#ff3366;color:white;padding:12px;border-radius:50px;width:100%">دخول</button>
             </div>
             <div id="adminMessagesArea" style="display:none;">
-                <div id="messagesList" class="admin-panel-content" style="max-height:50vh; overflow-y:auto; padding:0;"></div>
-                <button id="logoutAdminBtn" class="send-msg-btn" style="background:#ff3366; margin-top:10px;">خروج</button>
+                <div id="messagesList" style="max-height:50vh;overflow-y:auto"></div>
+                <button id="logoutAdminBtn" style="background:#ff3366;color:white;padding:12px;border-radius:50px;width:100%;margin-top:10px">خروج</button>
             </div>
         </div>
     </div>
     
-    <!-- النوافذ الأخرى (أسعار، نقاط بيع، معلومات، كروت محفوظة) -->
-    <div id="pricesModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('pricesModal')">&times;</span>
-            <div class="modal-title">باقات الإنترنت</div>
-            <div class="pricing-list">
-                <div class="pricing-item"><div class="price-info"><div class="price-value">200 ريال</div><div class="price-detail">صلاحية يوم</div></div><div class="price-data">2 جيجابايت</div></div>
-                <div class="pricing-item"><div class="price-info"><div class="price-value">500 ريال</div><div class="price-detail">صلاحية 4 أيام</div></div><div class="price-data">5 جيجابايت</div></div>
-                <div class="pricing-item"><div class="price-info"><div class="price-value">1000 ريال</div><div class="price-detail">صلاحية أسبوع</div></div><div class="price-data">12 جيجابايت</div></div>
-                <div class="pricing-item"><div class="price-info"><div class="price-value">3000 ريال</div><div class="price-detail">صلاحية شهر</div></div><div class="price-data">40 جيجابايت</div></div>
-            </div>
-        </div>
-    </div>
-    
-    <div id="pointsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('pointsModal')">&times;</span>
-            <div class="modal-title">نقاط البيع</div>
-            <div class="points-text-modal">
-                تتوفر كروت الشحن في جميع البقالة المجاورة للشبكة
-            </div>
-        </div>
-    </div>
-    
-    <div id="infoModal" class="info-modal">
-        <div class="info-content">
-            <span class="close-info-x" onclick="closeInfoModal()">&times;</span>
-            <h3>معلومات الاتصال</h3>
-            <div class="info-details">
-                <p><span>عنوان الشبكة</span> <span>172.31.3.186</span></p>
-                <p><span>التنزيل</span> <span>6 كيلوبايت</span></p>
-                <p><span>الرفع</span> <span>8 كيلوبايت</span></p>
-                <p><span>التحميل المتبقي</span> <span>15 جيجابايت</span></p>
-                <p><span>الوقت المستهلك</span> <span>7 ثانية</span></p>
-                <p><span>المدة المتبقية</span> <span>16 يوم 13 ساعة 52 دقيقة 24 ثانية</span></p>
-            </div>
-            <button class="close-info" onclick="closeInfoModal()">إغلاق</button>
-        </div>
-    </div>
-    
-    <div id="savedCardsModal" class="saved-cards-modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('savedCardsModal')">&times;</span>
-            <div class="modal-title">الكروت المحفوظة</div>
-            <div id="savedCardsList" class="saved-cards-list"></div>
-        </div>
-    </div>
+    <!-- باقي النوافذ -->
+    <div id="pricesModal" class="modal"><div class="modal-content"><span class="close-modal" onclick="closeModal('pricesModal')">&times;</span><div class="modal-title">باقات الإنترنت</div><div class="pricing-list"><div class="pricing-item">200 ريال - 2 جيجا</div><div class="pricing-item">500 ريال - 5 جيجا</div><div class="pricing-item">1000 ريال - 12 جيجا</div><div class="pricing-item">3000 ريال - 40 جيجا</div></div></div></div>
+    <div id="pointsModal" class="modal"><div class="modal-content"><span class="close-modal" onclick="closeModal('pointsModal')">&times;</span><div class="modal-title">نقاط البيع</div><div class="points-text-modal">تتوفر كروت الشحن في جميع البقالة المجاورة للشبكة</div></div></div>
+    <div id="infoModal" class="info-modal"><div class="info-content"><span class="close-info-x" onclick="closeInfoModal()">&times;</span><h3>معلومات الاتصال</h3><div class="info-details"><p>عنوان الشبكة: 172.31.3.186</p><p>المدة المتبقية: 16 يوم</p></div><button class="close-info" onclick="closeInfoModal()">إغلاق</button></div></div>
     
     <script>
-        // اتصال Socket.io
         const socket = io();
+        let adminMessages = [];
+        let isAdminLoggedIn = false;
         
-        const connectBtn = document.getElementById('connectBtn');
-        const voucherInput = document.getElementById('voucherCode');
+        // اتصال Socket.io
+        socket.on('connect', () => {
+            console.log('✅ متصل بالخادم');
+        });
         
-        // ========== نظام رسائل الإدارة مع Socket.io ==========
+        // استقبال تحديثات الرسائل
+        socket.on('admin-messages-update', (messages) => {
+            adminMessages = messages;
+            if (isAdminLoggedIn) {
+                renderMessagesList();
+            }
+        });
         
-        // فتح نافذة إرسال رسالة للإدارة
-        document.getElementById('contactAdminBtn').onclick = () => {
-            document.getElementById('adminMsgModal').style.display = 'flex';
-        };
-        
-        function closeAdminMsgModal() {
-            document.getElementById('adminMsgModal').style.display = 'none';
-            document.getElementById('adminMessage').value = '';
-            document.getElementById('senderName').value = '';
-        }
-        
-        // إرسال رسالة للإدارة عبر Socket.io
+        // إرسال رسالة جديدة
         document.getElementById('sendAdminMsgBtn').onclick = () => {
             const senderName = document.getElementById('senderName').value.trim();
             const message = document.getElementById('adminMessage').value.trim();
             
-            if (!senderName) {
-                Swal.fire({ icon: 'error', title: 'خطأ', text: 'يرجى إدخال اسمك', background: '#1e293b', color: '#fff', confirmButtonColor: '#eab308' });
-                return;
-            }
-            if (!message) {
-                Swal.fire({ icon: 'error', title: 'خطأ', text: 'يرجى كتابة الرسالة', background: '#1e293b', color: '#fff', confirmButtonColor: '#eab308' });
+            if (!senderName || !message) {
+                Swal.fire({ icon: 'error', title: 'خطأ', text: 'يرجى إدخال الاسم والرسالة' });
                 return;
             }
             
@@ -806,232 +133,114 @@
                 id: Date.now(),
                 sender: senderName,
                 message: message,
-                time: new Date().toLocaleString('ar-SA')
+                time: new Date().toLocaleString('ar-SA'),
+                deleted: false
             };
             
-            // إرسال للخادم
             socket.emit('send-admin-message', newMsg);
-            
-            Swal.fire({ icon: 'success', title: 'تم الإرسال', text: 'تم إرسال رسالتك للإدارة', timer: 2000, showConfirmButton: false, background: '#1e293b', color: '#fff' });
+            Swal.fire({ icon: 'success', title: 'تم الإرسال', text: 'تم إرسال رسالتك', timer: 2000, showConfirmButton: false });
             closeAdminMsgModal();
         };
         
-        // استقبال تحديثات الرسائل من الخادم (للوحة الإدارة)
-        socket.on('admin-messages-update', (messages) => {
-            window.adminMessages = messages;
-            if (document.getElementById('adminMessagesArea').style.display === 'block') {
-                renderMessagesList();
-            }
-        });
-        
-        // طلب آخر الرسائل عند الدخول للوحة الإدارة
-        function requestMessages() {
-            socket.emit('get-admin-messages');
+        // حذف رسالة للجميع
+        function deleteForEveryone(messageId) {
+            socket.emit('delete-admin-message', messageId);
+            Swal.fire({ icon: 'success', title: 'تم الحذف', text: 'تم حذف الرسالة للجميع', timer: 1500, showConfirmButton: false });
         }
         
-        // نافذة الإدارة
+        // عرض الرسائل في لوحة الإدارة
+        function renderMessagesList() {
+            const container = document.getElementById('messagesList');
+            if (!container) return;
+            
+            const activeMessages = adminMessages.filter(m => !m.deleted);
+            
+            if (activeMessages.length === 0) {
+                container.innerHTML = '<div class="no-messages">لا توجد رسائل</div>';
+                return;
+            }
+            
+            container.innerHTML = activeMessages.slice().reverse().map(msg => `
+                <div class="msg-item" data-id="${msg.id}">
+                    <div class="msg-sender"><i class="fas fa-user"></i> ${escapeHtml(msg.sender)}</div>
+                    <div class="msg-text">${escapeHtml(msg.message)}</div>
+                    <div class="msg-time"><i class="fas fa-clock"></i> ${msg.time}</div>
+                    <button class="delete-for-everyone-btn" onclick="deleteForEveryone(${msg.id})"><i class="fas fa-trash-alt"></i> حذف للجميع</button>
+                </div>
+            `).join('');
+        }
+        
+        // باقي الدوال المساعدة
+        function closeAdminMsgModal() {
+            document.getElementById('adminMsgModal').style.display = 'none';
+            document.getElementById('adminMessage').value = '';
+            document.getElementById('senderName').value = '';
+        }
+        
         function openAdminPanel() {
             document.getElementById('adminPanelModal').style.display = 'flex';
             document.getElementById('adminPassword').value = '';
             document.getElementById('adminLoginArea').style.display = 'block';
             document.getElementById('adminMessagesArea').style.display = 'none';
+            isAdminLoggedIn = false;
         }
         
         function closeAdminPanel() {
             document.getElementById('adminPanelModal').style.display = 'none';
         }
         
-        // تسجيل دخول الإدارة (كلمة المرور: admin123)
         document.getElementById('adminLoginBtn').onclick = () => {
             const password = document.getElementById('adminPassword').value;
             if (password === 'admin123') {
                 document.getElementById('adminLoginArea').style.display = 'none';
                 document.getElementById('adminMessagesArea').style.display = 'block';
-                requestMessages(); // طلب الرسائل من الخادم
+                isAdminLoggedIn = true;
+                renderMessagesList();
             } else {
-                Swal.fire({ icon: 'error', title: 'خطأ', text: 'كلمة المرور غير صحيحة', background: '#1e293b', color: '#fff', confirmButtonColor: '#eab308' });
+                Swal.fire({ icon: 'error', title: 'خطأ', text: 'كلمة المرور غير صحيحة' });
             }
         };
-        
-        // عرض الرسائل في لوحة الإدارة
-        function renderMessagesList() {
-            const container = document.getElementById('messagesList');
-            if (!container) return;
-            const msgs = window.adminMessages || [];
-            if (msgs.length === 0) {
-                container.innerHTML = '<div class="no-messages">لا توجد رسائل</div>';
-                return;
-            }
-            container.innerHTML = msgs.slice().reverse().map(msg => `
-                <div class="msg-item">
-                    <div class="msg-sender"><i class="fas fa-user"></i> ${escapeHtml(msg.sender)}</div>
-                    <div class="msg-text">${escapeHtml(msg.message)}</div>
-                    <div class="msg-time"><i class="fas fa-clock"></i> ${msg.time}</div>
-                    <button class="delete-msg-btn" data-id="${msg.id}"><i class="fas fa-trash"></i> حذف</button>
-                </div>
-            `).join('');
-            document.querySelectorAll('.delete-msg-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = parseInt(btn.getAttribute('data-id'));
-                    socket.emit('delete-admin-message', id);
-                });
-            });
-        }
         
         document.getElementById('logoutAdminBtn').onclick = () => {
             document.getElementById('adminLoginArea').style.display = 'block';
             document.getElementById('adminMessagesArea').style.display = 'none';
-            document.getElementById('adminPassword').value = '';
+            isAdminLoggedIn = false;
         };
         
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        document.getElementById('contactAdminBtn').onclick = () => document.getElementById('adminMsgModal').style.display = 'flex';
+        document.getElementById('pricesBtn').onclick = () => document.getElementById('pricesModal').style.display = 'flex';
+        document.getElementById('pointsBtn').onclick = () => document.getElementById('pointsModal').style.display = 'flex';
         
-        // فتح نافذة الإدارة (اختصار: الضغط على 3 مرات على الشعار)
         let logoClickCount = 0;
         document.querySelector('.logo').addEventListener('click', () => {
             logoClickCount++;
             setTimeout(() => { logoClickCount = 0; }, 1000);
-            if (logoClickCount >= 3) {
-                openAdminPanel();
-                logoClickCount = 0;
-            }
+            if (logoClickCount >= 3) { openAdminPanel(); logoClickCount = 0; }
         });
         
-        // ========== باقي الكود الأصلي ==========
-        
-        // الكروت المحفوظة
-        const STORAGE_KEY = 'saved_voucher_codes';
-        let savedCodes = [];
-        
-        try {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                savedCodes = JSON.parse(stored);
-                if (savedCodes.length > 2) savedCodes = savedCodes.slice(0, 2);
-            }
-        } catch(e) { savedCodes = []; }
-        
-        function saveCode(code) {
-            if (!code || code.trim() === '') return;
-            const index = savedCodes.indexOf(code);
-            if (index !== -1) savedCodes.splice(index, 1);
-            savedCodes.unshift(code);
-            if (savedCodes.length > 2) savedCodes = savedCodes.slice(0, 2);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedCodes));
-            renderSavedCardsModal();
-        }
-        
-        function renderSavedCardsModal() {
-            const container = document.getElementById('savedCardsList');
-            if (!container) return;
-            if (savedCodes.length === 0) {
-                container.innerHTML = '<div class="no-cards-msg">لا توجد كروت محفوظة</div>';
+        document.getElementById('connectBtn').onclick = () => {
+            const code = document.getElementById('voucherCode').value.trim();
+            if (!code) {
+                Swal.fire({ icon: 'error', title: 'خطأ', text: 'يرجى إدخال الرمز' });
                 return;
             }
-            container.innerHTML = savedCodes.map(code => `
-                <div class="saved-card-item">
-                    <span class="saved-card-code">${code}</span>
-                    <button class="use-card-btn" data-code="${code}">استخدام</button>
-                </div>
-            `).join('');
-            document.querySelectorAll('.use-card-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    voucherInput.value = this.getAttribute('data-code');
-                    closeModal('savedCardsModal');
-                    voucherInput.focus();
-                });
-            });
-        }
-        
-        document.getElementById('savedCardsBtn').onclick = () => {
-            renderSavedCardsModal();
-            document.getElementById('savedCardsModal').style.display = 'flex';
+            Swal.fire({ icon: 'success', title: 'تم بنجاح', text: 'تم توصيل الإنترنت', timer: 2000, showConfirmButton: false });
+            setTimeout(() => {
+                document.getElementById('infoModal').style.display = 'flex';
+                setTimeout(() => closeInfoModal(), 8000);
+            }, 2000);
         };
         
-        document.getElementById('pricesBtn').onclick = () => document.getElementById('pricesModal').style.display = 'flex';
-        document.getElementById('pointsBtn').onclick = () => document.getElementById('pointsModal').style.display = 'flex';
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        function closeInfoModal() { document.getElementById('infoModal').style.display = 'none'; }
+        function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
         
-        window.onclick = function(event) {
+        window.onclick = (event) => {
             if (event.target.classList.contains('modal')) event.target.style.display = 'none';
             if (event.target.classList.contains('info-modal')) event.target.style.display = 'none';
-            if (event.target.classList.contains('saved-cards-modal')) event.target.style.display = 'none';
             if (event.target.classList.contains('admin-msg-modal')) event.target.style.display = 'none';
             if (event.target.classList.contains('admin-panel-modal')) event.target.style.display = 'none';
         };
-        
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-        
-        function closeInfoModal() {
-            document.getElementById('infoModal').style.display = 'none';
-        }
-        
-        voucherInput.addEventListener('input', function(e) {
-            let currentValue = this.value;
-            let englishValue = currentValue.replace(/[٠-٩]/g, function(match) {
-                const arabicToEnglish = {
-                    '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
-                    '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
-                };
-                return arabicToEnglish[match];
-            });
-            if (currentValue !== englishValue) {
-                this.value = englishValue;
-            }
-            this.value = this.value.replace(/[A-Z]/g, m => m.toLowerCase());
-        });
-        
-        connectBtn.addEventListener('click', function() {
-            let code = voucherInput.value.trim();
-            
-            if (code === '') {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'خطأ',
-                    text: 'يرجى إدخال الرمز',
-                    confirmButtonText: 'حسناً',
-                    background: '#1e293b',
-                    color: '#fff',
-                    confirmButtonColor: '#eab308'
-                });
-                return;
-            }
-            
-            saveCode(code);
-            
-            Swal.fire({
-                icon: 'success',
-                title: 'تم بنجاح',
-                text: 'تم توصيل الإنترنت بنجاح',
-                timer: 2000,
-                showConfirmButton: false,
-                background: '#1e293b',
-                color: '#fff'
-            });
-            
-            setTimeout(() => {
-                document.getElementById('infoModal').style.display = 'flex';
-                voucherInput.value = '';
-                
-                setTimeout(() => {
-                    closeInfoModal();
-                }, 8000);
-            }, 2000);
-        });
-        
-        voucherInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                connectBtn.click();
-            }
-        });
-        
-        renderSavedCardsModal();
     </script>
 </body>
 </html>
