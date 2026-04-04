@@ -18,6 +18,8 @@
     
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap');
@@ -767,23 +769,13 @@
     </div>
     
     <script>
+        // اتصال Socket.io
+        const socket = io();
+        
         const connectBtn = document.getElementById('connectBtn');
         const voucherInput = document.getElementById('voucherCode');
         
-        // ========== نظام رسائل الإدارة ==========
-        let adminMessages = [];
-        
-        // تحميل الرسائل المخزنة
-        try {
-            const stored = localStorage.getItem('adminMessages');
-            if (stored) {
-                adminMessages = JSON.parse(stored);
-            }
-        } catch(e) { adminMessages = []; }
-        
-        function saveMessages() {
-            localStorage.setItem('adminMessages', JSON.stringify(adminMessages));
-        }
+        // ========== نظام رسائل الإدارة مع Socket.io ==========
         
         // فتح نافذة إرسال رسالة للإدارة
         document.getElementById('contactAdminBtn').onclick = () => {
@@ -796,7 +788,7 @@
             document.getElementById('senderName').value = '';
         }
         
-        // إرسال رسالة للإدارة
+        // إرسال رسالة للإدارة عبر Socket.io
         document.getElementById('sendAdminMsgBtn').onclick = () => {
             const senderName = document.getElementById('senderName').value.trim();
             const message = document.getElementById('adminMessage').value.trim();
@@ -816,12 +808,26 @@
                 message: message,
                 time: new Date().toLocaleString('ar-SA')
             };
-            adminMessages.push(newMsg);
-            saveMessages();
+            
+            // إرسال للخادم
+            socket.emit('send-admin-message', newMsg);
             
             Swal.fire({ icon: 'success', title: 'تم الإرسال', text: 'تم إرسال رسالتك للإدارة', timer: 2000, showConfirmButton: false, background: '#1e293b', color: '#fff' });
             closeAdminMsgModal();
         };
+        
+        // استقبال تحديثات الرسائل من الخادم (للوحة الإدارة)
+        socket.on('admin-messages-update', (messages) => {
+            window.adminMessages = messages;
+            if (document.getElementById('adminMessagesArea').style.display === 'block') {
+                renderMessagesList();
+            }
+        });
+        
+        // طلب آخر الرسائل عند الدخول للوحة الإدارة
+        function requestMessages() {
+            socket.emit('get-admin-messages');
+        }
         
         // نافذة الإدارة
         function openAdminPanel() {
@@ -841,7 +847,7 @@
             if (password === 'admin123') {
                 document.getElementById('adminLoginArea').style.display = 'none';
                 document.getElementById('adminMessagesArea').style.display = 'block';
-                renderMessagesList();
+                requestMessages(); // طلب الرسائل من الخادم
             } else {
                 Swal.fire({ icon: 'error', title: 'خطأ', text: 'كلمة المرور غير صحيحة', background: '#1e293b', color: '#fff', confirmButtonColor: '#eab308' });
             }
@@ -851,11 +857,12 @@
         function renderMessagesList() {
             const container = document.getElementById('messagesList');
             if (!container) return;
-            if (adminMessages.length === 0) {
+            const msgs = window.adminMessages || [];
+            if (msgs.length === 0) {
                 container.innerHTML = '<div class="no-messages">لا توجد رسائل</div>';
                 return;
             }
-            container.innerHTML = adminMessages.slice().reverse().map(msg => `
+            container.innerHTML = msgs.slice().reverse().map(msg => `
                 <div class="msg-item">
                     <div class="msg-sender"><i class="fas fa-user"></i> ${escapeHtml(msg.sender)}</div>
                     <div class="msg-text">${escapeHtml(msg.message)}</div>
@@ -866,9 +873,7 @@
             document.querySelectorAll('.delete-msg-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = parseInt(btn.getAttribute('data-id'));
-                    adminMessages = adminMessages.filter(m => m.id !== id);
-                    saveMessages();
-                    renderMessagesList();
+                    socket.emit('delete-admin-message', id);
                 });
             });
         }
