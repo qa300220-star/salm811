@@ -1,27 +1,30 @@
-const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
+const fs = require('fs');
 
-const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
+// ملف حفظ الرسائل
+const MESSAGES_FILE = './adminMessages.json';
 
-app.use(express.static('public'));
-
+// تحميل الرسائل من الملف عند بدء التشغيل
 let adminMessages = [];
+if (fs.existsSync(MESSAGES_FILE)) {
+    const data = fs.readFileSync(MESSAGES_FILE);
+    adminMessages = JSON.parse(data);
+}
 
-io.on('connection', (socket) => {
-    console.log('✅ مستخدم متصل');
+// حفظ الرسائل في الملف كل ما تتغير
+function saveMessages() {
+    fs.writeFileSync(MESSAGES_FILE, JSON.stringify(adminMessages));
+}
 
-    socket.on('send-admin-message', (msg) => {
-        adminMessages.push(msg);
-        io.emit('admin-messages-update', adminMessages);
-    });
-
-    socket.on('get-admin-messages', () => {
-        socket.emit('admin-messages-update', adminMessages);
-    });
+// عند إرسال رسالة جديدة
+socket.on('send-admin-message', (msg) => {
+    adminMessages.push(msg);
+    saveMessages();  // حفظ في الملف
+    io.emit('admin-messages-update', adminMessages);
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
+// عند حذف رسالة
+socket.on('delete-admin-message', (id) => {
+    adminMessages = adminMessages.filter(m => m.id !== id);
+    saveMessages();  // حفظ التعديل
+    io.emit('admin-messages-update', adminMessages);
+});
