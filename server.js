@@ -1,14 +1,12 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-// بدل app.use(express.static('public')); استخدم هذا:
-app.use(express.static(__dirname));  // يقرأ الملفات من نفس المجلد
+app.use(express.static('public'));
 
 let messages = [];
 
