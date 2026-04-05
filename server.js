@@ -1,63 +1,107 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-const fs = require('fs');
-const path = require('path');
+const { MongoClient } = require('mongodb');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+  cors: { origin: "*", methods: ["GET", "POST"] }
+});
 
 app.use(express.static('public'));
 
-// ملف حفظ الرسائل
-const MESSAGES_FILE = path.join(__dirname, 'adminMessages.json');
+// رابط MongoDB مع كلمة المرور 123456789
+const uri = "mongodb+srv://dbdbbddbdbdbdb501_db_user:123456789@cluster0.7mek47o.mongodb.net/?appName=Cluster0";
 
-// تحميل الرسائل المحفوظة
-let adminMessages = [];
-if (fs.existsSync(MESSAGES_FILE)) {
+const client = new MongoClient(uri);
+let db;
+let adminMessagesCollection;
+
+async function connectDB() {
     try {
-        const data = fs.readFileSync(MESSAGES_FILE, 'utf8');
-        adminMessages = JSON.parse(data);
-        console.log(`📥 تم تحميل ${adminMessages.length} رسالة`);
+        await client.connect();
+        console.log('✅ متصل بـ MongoDB Atlas');
+        db = client.db('salem_tech');
+        adminMessagesCollection = db.collection('admin_messages');
+        
+        // عمل index على الوقت
+        await adminMessagesCollection.createIndex({ createdAt: -1 });
+        
+        console.log('✅ قاعدة البيانات جاهزة');
     } catch(e) {
-        console.log('خطأ في تحميل الرسائل');
+        console.log('❌ خطأ في الاتصال بقاعدة البيانات:', e.message);
     }
 }
 
-// حفظ الرسائل في الملف
-function saveMessages() {
-    fs.writeFileSync(MESSAGES_FILE, JSON.stringify(adminMessages, null, 2));
-    console.log(`💾 تم حفظ ${adminMessages.length} رسالة`);
-}
+connectDB();
 
 io.on('connection', (socket) => {
     console.log('✅ مستخدم متصل');
 
-    // إرسال رسالة جديدة
-    socket.on('send-admin-message', (msg) => {
-        adminMessages.push(msg);
-        saveMessages();
-        io.emit('admin-messages-update', adminMessages);
+    // ========== رسائل الإدارة ==========
+    
+    // إرسال رسالة جديدة للإدارة
+    socket.on('send-admin-message', async (msg) => {
+        const adminMsg = {
+            id: Date.now(),
+            sender: msg.sender,
+            message: msg.message,
+            time: new Date().toLocaleString('ar-SA'),
+            createdAt: new Date()
+        };
+        
+        try {
+            await adminMessagesCollection.insertOne(adminMsg);
+            console.log('📨 تم استلام رسالة جديدة من:', msg.sender);
+            
+            // جلب جميع الرسائل بعد الإضافة
+            const allMessages = await adminMessagesCollection.find({})
+                .sort({ createdAt: -1 })
+                .toArray();
+            io.emit('admin-messages-update', allMessages);
+        } catch(e) {
+            console.log('❌ خطأ في حفظ رسالة الإدارة:', e.message);
+        }
     });
 
-    // طلب الرسائل
-    socket.on('get-admin-messages', () => {
-        socket.emit('admin-messages-update', adminMessages);
+    // طلب جميع رسائل الإدارة
+    socket.on('get-admin-messages', async () => {
+        try {
+            const allMessages = await adminMessagesCollection.find({})
+                .sort({ createdAt: -1 })
+                .toArray();
+            socket.emit('admin-messages-update', allMessages);
+            console.log(`📤 تم إرسال ${allMessages.length} رسالة إدارة`);
+        } catch(e) {
+            console.log('❌ خطأ في جلب رسائل الإدارة:', e.message);
+            socket.emit('admin-messages-update', []);
+        }
     });
     
-    // ✅ إضافة حدث الحذف (هذا هو المطلوب)
-    socket.on('delete-admin-message', (messageId) => {
+    // حذف رسالة إدارة (للمدير فقط)
+    socket.on('delete-admin-message', async (messageId) => {
         console.log('🗑️ جاري حذف الرسالة:', messageId);
-        const index = adminMessages.findIndex(m => m.id == messageId);
-        if (index !== -1) {
-            adminMessages.splice(index, 1);  // حذف نهائي
-            saveMessages();                   // حفظ التغيير
-            io.emit('admin-messages-update', adminMessages);  // تحديث الجميع
-            console.log('✅ تم حذف الرسالة نهائياً');
+        try {
+            const result = await adminMessagesCollection.deleteOne({ id: messageId });
+            if (result.deletedCount > 0) {
+                console.log('✅ تم حذف الرسالة نهائياً');
+                
+                // إرسال التحديث للجميع
+                const allMessages = await adminMessagesCollection.find({})
+                    .sort({ createdAt: -1 })
+                    .toArray();
+                io.emit('admin-messages-update', allMessages);
+            } else {
+                console.log('⚠️ لم يتم العثور على الرسالة');
+            }
+        } catch(e) {
+            console.log('❌ خطأ في حذف الرسالة:', e.message);
         }
     });
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 سيرفر رسائل الإدارة يعمل على http://localhost:${PORT}`);
+});
