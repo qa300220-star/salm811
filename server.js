@@ -6,12 +6,7 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
-});
+const io = socketIo(server);
 
 app.use(express.static('public'));
 
@@ -27,7 +22,6 @@ if (fs.existsSync(MESSAGES_FILE)) {
         console.log(`📥 تم تحميل ${adminMessages.length} رسالة`);
     } catch(e) {
         console.log('خطأ في تحميل الرسائل');
-        adminMessages = [];
     }
 }
 
@@ -40,36 +34,30 @@ function saveMessages() {
 io.on('connection', (socket) => {
     console.log('✅ مستخدم متصل');
 
-    // إرسال رسالة جديدة - تظهر للجميع
+    // إرسال رسالة جديدة
     socket.on('send-admin-message', (msg) => {
-        console.log('📨 رسالة جديدة من:', msg.sender);
         adminMessages.push(msg);
         saveMessages();
-        // تبث للجميع (أي أحد متصل)
         io.emit('admin-messages-update', adminMessages);
     });
 
-    // طلب الرسائل - للمستخدم الجديد
+    // طلب الرسائل
     socket.on('get-admin-messages', () => {
         socket.emit('admin-messages-update', adminMessages);
     });
     
-    // حذف رسالة (للمدير فقط)
+    // ✅ إضافة حدث الحذف (هذا هو المطلوب)
     socket.on('delete-admin-message', (messageId) => {
         console.log('🗑️ جاري حذف الرسالة:', messageId);
         const index = adminMessages.findIndex(m => m.id == messageId);
         if (index !== -1) {
-            adminMessages.splice(index, 1);
-            saveMessages();
-            // تبث التحديث للجميع
-            io.emit('admin-messages-update', adminMessages);
+            adminMessages.splice(index, 1);  // حذف نهائي
+            saveMessages();                   // حفظ التغيير
+            io.emit('admin-messages-update', adminMessages);  // تحديث الجميع
             console.log('✅ تم حذف الرسالة نهائياً');
         }
     });
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 السيرفر يعمل على http://localhost:${PORT}`);
-    console.log(`📢 أي شخص يفتح الرابط يشوف الرسائل`);
-});
+server.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
