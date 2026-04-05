@@ -1,12 +1,14 @@
 {
-  "name": "my-chat-app",
+  "name": "salem-tech-admin",
   "version": "1.0.0",
+  "description": "سالم تك - نظام رسائل الإدارة مع MongoDB",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "socket.io": "^4.6.1"
+    "socket.io": "^4.6.1",
+    "mongodb": "^5.0.0"
   }
 }
