@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: salem-tech
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1
