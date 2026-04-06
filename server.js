@@ -1,85 +1,63 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-const { MongoClient } = require('mongodb');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
-});
+const io = socketIo(server);
 
 app.use(express.static('public'));
 
-// رابط MongoDB (خليه كذا)
-const uri = process.env.MONGODB_URI || "mongodb+srv://dbdbbddbdbdbdb501_db_user:123456789@cluster0.7mek47o.mongodb.net/?appName=Cluster0";
+// ظ…ظ„ظپ طظپط¸ ط§ظ„ط±ط³ط§ط¦ظ„
+const MESSAGES_FILE = path.join(__dirname, 'adminMessages.json');
 
-const client = new MongoClient(uri);
-let db;
-let adminMessagesCollection;
-
-async function connectDB() {
-    try {
-        await client.connect();
-        console.log('✅ متصل بـ MongoDB');
-        db = client.db('salem_tech');
-        adminMessagesCollection = db.collection('admin_messages');
-        console.log('✅ قاعدة البيانات جاهزة');
+// طھطظ…ظٹظ‹ ط§ظ‹ط±ط³ط§ط¦ظ‹ ط§ظ‹ظ…طظپظˆط¸ط©
+let adminMessages = [];
+إذا كان ملف الرسائل موجودًا في نظام الملفات (fs.existsSync(MESSAGES_FILE)) {
+    يحاول {
+        const data = fs.readFileSync(MESSAGES_FILE, 'utf8');
+        adminMessages = JSON.parse(data);
+        console.log(`ًں“¥ طھظ… طھطظ…ظٹظ„ ${adminMessages.length} ط±ط³ط§ظ„ط©`);
     } catch(e) {
-        console.log('❌ خطأ:', e.message);
-    }
-}
-connectDB();
-
-async function getAllMessages() {
-    try {
-        return await adminMessagesCollection.find({}).toArray();
-    } catch(e) {
-        return [];
+        console.log('ط®ط·ط £ ظپظٹ طھطظ…ظٹظ‹ ط§ظ‹ط±ط³ط§ط¦ظ„');
     }
 }
 
-io.on('connection', async (socket) => {
-    console.log('✅ مستخدم متصل');
+// طظپط¸ ط§ظ‹ط±ط³ط§ط¦ظ‹ ظپظٹ ط§ظ‹ظ…ظ‹ظپ
+دالة حفظ الرسائل() {
+    fs.writeFileSync(MESSAGES_FILE, JSON.stringify(adminMessages, null, 2));
+    console.log(`ًں'¾ طھظ… طظپط¸ ${adminMessages.length} ط±ط³ط§ظ„ط©`);
+}
 
-    socket.on('send-admin-message', async (msg) => {
-        const adminMsg = {
-            id: Date.now(),
-            sender: msg.sender,
-            message: msg.message,
-            time: new Date().toLocaleString('ar-SA'),
-            createdAt: new Date()
-        };
-        
-        try {
-            await adminMessagesCollection.insertOne(adminMsg);
-            const allMessages = await getAllMessages();
-            io.emit('admin-messages-update', allMessages);
-        } catch(e) {
-            console.log('خطأ:', e);
-        }
+io.on('connection', (socket) => {
+    console.log('âœ… ظ…ط³طھط®ط¯ظ… ظ…طھط¯ظ„');
+
+    // ط¥ط±ط³ط§ظ„ ط±ط³ط§ظ„ط© ط¬ط¯ظٹط¯ط©
+    socket.on('send-admin-message', (msg) => {
+        adminMessages.push(msg);
+        saveMessages();
+        io.emit('admin-messages-update', adminMessages);
     });
 
-    socket.on('get-admin-messages', async () => {
-        const allMessages = await getAllMessages();
-        socket.emit('admin-messages-update', allMessages);
+    // ط·ظ‹ط¨ ط§ظ‹ط±ط³ط§ط¦ظ‹
+    socket.on('get-admin-messages', () => {
+        socket.emit('admin-messages-update', adminMessages);
     });
     
-    socket.on('delete-admin-message', async (messageId) => {
-        try {
-            await adminMessagesCollection.deleteOne({ id: messageId });
-            const allMessages = await getAllMessages();
-            io.emit('admin-messages-update', allMessages);
-        } catch(e) {
-            console.log('خطأ:', e);
+    // œ… ط¥ط¶ط§ظپط© طط¯ط« ط§ظ„طط°ظپ (ظ‡ط°ط§ ظ‡ظˆ ط§ظ„ظ…ط·ظ„ظˆط¨)
+    socket.on('delete-admin-message', (messageId) => {
+        console.log('ًں—'ï¸ڈ ط¬ط§ط±ظٹ طط°ظپ ط§ظ‹ط±ط³ط§ظ‹ط©:', messageId);
+        const index = adminMessages.findIndex(m => m.id == messageId);
+        إذا كان (الفهرس !== -1) {
+            adminMessages.splice(index, 1); // طط°ظپ ظ†ظ‡ط§ط¦ظٹ
+            saveMessages(); // طظپط¸ ط§ظ‹طھط؛ظٹظٹط±
+            io.emit('admin-messages-update', adminMessages); // طھطط¯ظٹط« ط§ظ„ط¬ظ…ظٹط¹
+            console.log('œ… طھظ… طط°ظپ ط§ظ„ط±ط³ط§ظ‹ط© ظ†ظ‡ط§ط¦ظٹط§ظ‹');
         }
     });
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server on port ${PORT}`);
-});
+server.listen(PORT, () => console.log(`الخادم على المنفذ ${PORT}`));
