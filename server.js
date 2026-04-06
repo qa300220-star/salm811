@@ -10,54 +10,54 @@ const io = socketIo(server);
 
 app.use(express.static('public'));
 
-// ظ…ظ„ظپ طظپط¸ ط§ظ„ط±ط³ط§ط¦ظ„
+// ملف حفظ الرسائل
 const MESSAGES_FILE = path.join(__dirname, 'adminMessages.json');
 
-// طھطظ…ظٹظ‹ ط§ظ‹ط±ط³ط§ط¦ظ‹ ط§ظ‹ظ…طظپظˆط¸ط©
+// تحميل الرسائل المحفوظة
 let adminMessages = [];
-إذا كان ملف الرسائل موجودًا في نظام الملفات (fs.existsSync(MESSAGES_FILE)) {
-    يحاول {
+if (fs.existsSync(MESSAGES_FILE)) {
+    try {
         const data = fs.readFileSync(MESSAGES_FILE, 'utf8');
         adminMessages = JSON.parse(data);
-        console.log(`ًں“¥ طھظ… طھطظ…ظٹظ„ ${adminMessages.length} ط±ط³ط§ظ„ط©`);
+        console.log(`📥 تم تحميل ${adminMessages.length} رسالة`);
     } catch(e) {
-        console.log('ط®ط·ط £ ظپظٹ طھطظ…ظٹظ‹ ط§ظ‹ط±ط³ط§ط¦ظ„');
+        console.log('خطأ في تحميل الرسائل');
     }
 }
 
-// طظپط¸ ط§ظ‹ط±ط³ط§ط¦ظ‹ ظپظٹ ط§ظ‹ظ…ظ‹ظپ
-دالة حفظ الرسائل() {
+// حفظ الرسائل في الملف
+function saveMessages() {
     fs.writeFileSync(MESSAGES_FILE, JSON.stringify(adminMessages, null, 2));
-    console.log(`ًں'¾ طھظ… طظپط¸ ${adminMessages.length} ط±ط³ط§ظ„ط©`);
+    console.log(`💾 تم حفظ ${adminMessages.length} رسالة`);
 }
 
 io.on('connection', (socket) => {
-    console.log('âœ… ظ…ط³طھط®ط¯ظ… ظ…طھط¯ظ„');
+    console.log('✅ مستخدم متصل');
 
-    // ط¥ط±ط³ط§ظ„ ط±ط³ط§ظ„ط© ط¬ط¯ظٹط¯ط©
+    // إرسال رسالة جديدة
     socket.on('send-admin-message', (msg) => {
         adminMessages.push(msg);
         saveMessages();
         io.emit('admin-messages-update', adminMessages);
     });
 
-    // ط·ظ‹ط¨ ط§ظ‹ط±ط³ط§ط¦ظ‹
+    // طلب الرسائل
     socket.on('get-admin-messages', () => {
         socket.emit('admin-messages-update', adminMessages);
     });
     
-    // œ… ط¥ط¶ط§ظپط© طط¯ط« ط§ظ„طط°ظپ (ظ‡ط°ط§ ظ‡ظˆ ط§ظ„ظ…ط·ظ„ظˆط¨)
+    // حذف رسالة
     socket.on('delete-admin-message', (messageId) => {
-        console.log('ًں—'ï¸ڈ ط¬ط§ط±ظٹ طط°ظپ ط§ظ‹ط±ط³ط§ظ‹ط©:', messageId);
+        console.log('🗑️ جاري حذف الرسالة:', messageId);
         const index = adminMessages.findIndex(m => m.id == messageId);
-        إذا كان (الفهرس !== -1) {
-            adminMessages.splice(index, 1); // طط°ظپ ظ†ظ‡ط§ط¦ظٹ
-            saveMessages(); // طظپط¸ ط§ظ‹طھط؛ظٹظٹط±
-            io.emit('admin-messages-update', adminMessages); // طھطط¯ظٹط« ط§ظ„ط¬ظ…ظٹط¹
-            console.log('œ… طھظ… طط°ظپ ط§ظ„ط±ط³ط§ظ‹ط© ظ†ظ‡ط§ط¦ظٹط§ظ‹');
+        if (index !== -1) {
+            adminMessages.splice(index, 1);
+            saveMessages();
+            io.emit('admin-messages-update', adminMessages);
+            console.log('✅ تم حذف الرسالة نهائياً');
         }
     });
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`الخادم على المنفذ ${PORT}`));
+server.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
