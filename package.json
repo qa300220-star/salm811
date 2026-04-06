@@ -1,7 +1,6 @@
 {
-  "name": "salem-tech-admin",
+  "name": "salem-tech",
   "version": "1.0.0",
-  "description": "سالم تك - نظام رسائل الإدارة مع MongoDB",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
